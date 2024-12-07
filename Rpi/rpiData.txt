@@ -1,0 +1,52 @@
+// Rpi cam preview for 10 sec
+rpicam-hello --timeout 10000
+
+// Get cpu temp
+vcgencmd measure_temp 
+
+// Get
+nmcli
+
+// Set usb tethering address to a static address
+nmcli connection modify "Wired connection 2" ipv4.addresses 192.168.210.224/24
+ ipv4.gateway 192.168.210.1 ipv4.dns "8.8.8.8,8.8.4.4" ipv4.method manual
+
+// Reset connection
+nmcli connection up "Wired connection 2"
+
+// Get Ip address
+ip addr
+
+// Config Rpi
+sudo raspi-config 
+
+
+rpicam-hello --lores-width 128 --lores-height 96 --post-process-file motion_detect.json 
+
+rpicam-hello --lores-width 128 --lores-height 96 --post-process-file motion_detect.json --timeout 5000
+
+rpicam-jpeg --output img.jpg --lores-width 128 --lores-height 96 --post-process-file motion_detect.json --timeout 10000
+
+Sensor: /base/axi/pcie@120000/rp1/i2c@88000/ov5647@36 - Selected sensor format: 1296x972-SGBRG10_1X10 - Selected CFE format: 1296x972-PC1g
+
+
+
+
+
+
+
+rpicam-hello --lores-width 128 --lores-height 96 --post-process-file motion_detect.json --timeout 5000
+
+rpicam-hello --lores-width 128 --lores-height 96 --post-process-file motion_detect.json --timeout 5000 > motion_log.txt
+#!/bin/bash
+
+LOG_FILE="motion_log.txt"
+
+# Monitor the log file for motion detection keyword
+tail -F "motion_log.txt" | while read -r line; do
+    # Adjust this condition to match your motion detection log
+    if echo "" | grep -q "motion detected"; then
+        echo "Motion detected! Running test.sh..."
+        ./test.sh
+    fi
+done
