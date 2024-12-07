@@ -1,6 +1,3 @@
-// Rpi cam preview for 10 sec
-rpicam-hello --timeout 10000
-
 // Get cpu temp
 vcgencmd measure_temp 
 
@@ -20,6 +17,10 @@ ip addr
 // Config Rpi
 sudo raspi-config 
 
+// Rpi cam preview for 10 sec
+rpicam-hello --timeout 10000
+
+rpicam-hello --lores-width 128 --lores-height 96 --timeout 30000
 
 rpicam-hello --lores-width 128 --lores-height 96 --post-process-file motion_detect.json 
 
@@ -38,6 +39,10 @@ Sensor: /base/axi/pcie@120000/rp1/i2c@88000/ov5647@36 - Selected sensor format: 
 rpicam-hello --lores-width 128 --lores-height 96 --post-process-file motion_detect.json --timeout 5000
 
 rpicam-hello --lores-width 128 --lores-height 96 --post-process-file motion_detect.json --timeout 5000 > motion_log.txt
+
+rpicam-hello --lores-width 128 --lores-height 96 --post-process-file motion_detect.json --timeout 5000 >> motion_log.txt 2>&1
+
+
 #!/bin/bash
 
 LOG_FILE="motion_log.txt"
