@@ -1,6 +1,6 @@
-[0:27:22.862270939] [4224] [1;32m INFO [1;37mCamera [1;34mcamera_manager.cpp:325 [0mlibcamera v0.3.2+27-7330f29b
-[0:27:22.870530806] [4227] [1;32m INFO [1;37mRPI [1;34mpisp.cpp:695 [0mlibpisp version v1.0.7 28196ed6edcf 29-08-2024 (16:33:32)
-[0:27:22.889093892] [4227] [1;32m INFO [1;37mRPI [1;34mpisp.cpp:1154 [0mRegistered camera /base/axi/pcie@120000/rp1/i2c@88000/ov5647@36 to CFE device /dev/media2 and ISP device /dev/media0 using PiSP variant BCM2712_C0
+[0:55:46.594813612] [6814] [1;32m INFO [1;37mCamera [1;34mcamera_manager.cpp:325 [0mlibcamera v0.3.2+27-7330f29b
+[0:55:46.603215953] [6817] [1;32m INFO [1;37mRPI [1;34mpisp.cpp:695 [0mlibpisp version v1.0.7 28196ed6edcf 29-08-2024 (16:33:32)
+[0:55:46.621854898] [6817] [1;32m INFO [1;37mRPI [1;34mpisp.cpp:1154 [0mRegistered camera /base/axi/pcie@120000/rp1/i2c@88000/ov5647@36 to CFE device /dev/media0 and ISP device /dev/media2 using PiSP variant BCM2712_C0
 Made X/EGL preview window
 Reading post processing stage "motion_detect"
 No post processing stage found for "post_process"
@@ -10,8 +10,48 @@ Mode selection for 1296:972:12:P
     SGBRG10_CSI2P,1920x1080/0 - Score: 1349.67
     SGBRG10_CSI2P,2592x1944/0 - Score: 1567
 Stream configuration adjusted
-[0:27:24.070899598] [4224] [1;32m INFO [1;37mCamera [1;34mcamera.cpp:1197 [0mconfiguring streams: (0) 1296x972-YUV420 (1) 128x96-YUV420 (2) 1296x972-GBRG_PISP_COMP1
-[0:27:24.071148892] [4227] [1;32m INFO [1;37mRPI [1;34mpisp.cpp:1450 [0mSensor: /base/axi/pcie@120000/rp1/i2c@88000/ov5647@36 - Selected sensor format: 1296x972-SGBRG10_1X10 - Selected CFE format: 1296x972-PC1g
+[0:55:47.783109142] [6814] [1;32m INFO [1;37mCamera [1;34mcamera.cpp:1197 [0mconfiguring streams: (0) 1296x972-YUV420 (1) 128x96-YUV420 (2) 1296x972-GBRG_PISP_COMP1
+[0:55:47.783313587] [6817] [1;32m INFO [1;37mRPI [1;34mpisp.cpp:1450 [0mSensor: /base/axi/pcie@120000/rp1/i2c@88000/ov5647@36 - Selected sensor format: 1296x972-SGBRG10_1X10 - Selected CFE format: 1296x972-PC1g
+Lores: 64x48 roi: (6,4) 51x38 threshold: 9
+Motion detected
+Motion stopped
+Motion detected
+Motion stopped
+[0:59:54.150576538] [7055] [1;32m INFO [1;37mCamera [1;34mcamera_manager.cpp:325 [0mlibcamera v0.3.2+27-7330f29b
+[0:59:54.159030919] [7058] [1;32m INFO [1;37mRPI [1;34mpisp.cpp:695 [0mlibpisp version v1.0.7 28196ed6edcf 29-08-2024 (16:33:32)
+[0:59:54.177649011] [7058] [1;32m INFO [1;37mRPI [1;34mpisp.cpp:1154 [0mRegistered camera /base/axi/pcie@120000/rp1/i2c@88000/ov5647@36 to CFE device /dev/media0 and ISP device /dev/media2 using PiSP variant BCM2712_C0
+Made X/EGL preview window
+Reading post processing stage "motion_detect"
+No post processing stage found for "post_process"
+Mode selection for 1296:972:12:P
+    SGBRG10_CSI2P,640x480/0 - Score: 3296
+    SGBRG10_CSI2P,1296x972/0 - Score: 1000
+    SGBRG10_CSI2P,1920x1080/0 - Score: 1349.67
+    SGBRG10_CSI2P,2592x1944/0 - Score: 1567
+Stream configuration adjusted
+[0:59:55.333048803] [7055] [1;32m INFO [1;37mCamera [1;34mcamera.cpp:1197 [0mconfiguring streams: (0) 1296x972-YUV420 (1) 128x96-YUV420 (2) 1296x972-GBRG_PISP_COMP1
+[0:59:55.333190582] [7058] [1;32m INFO [1;37mRPI [1;34mpisp.cpp:1450 [0mSensor: /base/axi/pcie@120000/rp1/i2c@88000/ov5647@36 - Selected sensor format: 1296x972-SGBRG10_1X10 - Selected CFE format: 1296x972-PC1g
+Lores: 64x48 roi: (6,4) 51x38 threshold: 9
+Motion detected
+Motion stopped
+Motion detected
+Motion stopped
+Motion detected
+Motion stopped
+[1:00:09.954910421] [7431] [1;32m INFO [1;37mCamera [1;34mcamera_manager.cpp:325 [0mlibcamera v0.3.2+27-7330f29b
+[1:00:09.963048967] [7434] [1;32m INFO [1;37mRPI [1;34mpisp.cpp:695 [0mlibpisp version v1.0.7 28196ed6edcf 29-08-2024 (16:33:32)
+[1:00:09.981715511] [7434] [1;32m INFO [1;37mRPI [1;34mpisp.cpp:1154 [0mRegistered camera /base/axi/pcie@120000/rp1/i2c@88000/ov5647@36 to CFE device /dev/media0 and ISP device /dev/media2 using PiSP variant BCM2712_C0
+Made X/EGL preview window
+Reading post processing stage "motion_detect"
+No post processing stage found for "post_process"
+Mode selection for 1296:972:12:P
+    SGBRG10_CSI2P,640x480/0 - Score: 3296
+    SGBRG10_CSI2P,1296x972/0 - Score: 1000
+    SGBRG10_CSI2P,1920x1080/0 - Score: 1349.67
+    SGBRG10_CSI2P,2592x1944/0 - Score: 1567
+Stream configuration adjusted
+[1:00:11.137805884] [7431] [1;32m INFO [1;37mCamera [1;34mcamera.cpp:1197 [0mconfiguring streams: (0) 1296x972-YUV420 (1) 128x96-YUV420 (2) 1296x972-GBRG_PISP_COMP1
+[1:00:11.137995923] [7434] [1;32m INFO [1;37mRPI [1;34mpisp.cpp:1450 [0mSensor: /base/axi/pcie@120000/rp1/i2c@88000/ov5647@36 - Selected sensor format: 1296x972-SGBRG10_1X10 - Selected CFE format: 1296x972-PC1g
 Lores: 64x48 roi: (6,4) 51x38 threshold: 9
 Motion detected
 Motion stopped

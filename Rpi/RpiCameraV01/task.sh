@@ -1,2 +1,3 @@
-echo hey there
+echo Initialized tash.sh
+vcgencmd measure_temp
 
