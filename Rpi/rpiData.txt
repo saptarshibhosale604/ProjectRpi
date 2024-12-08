@@ -17,6 +17,9 @@ ip addr
 // Config Rpi
 sudo raspi-config 
 
+// tempMeasurementScript
+lxterminal -e "python ProjectRpi/Rpi/Background/tempMeasurement.py"
+
 // Rpi cam preview for 10 sec
 rpicam-hello --timeout 10000
 
