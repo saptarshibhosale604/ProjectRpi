@@ -1,5 +1,17 @@
 
 
+# Custom scripts
+
+# Cooling fan control python script based on cpu temperature
+lxterminal -e "python /home/rpissb/ProjectRpi/Rpi/Background/tempMeasurement.py"
+
+# txt rpiData file
+alias txtRpiData="gedit /home/rpissb/ProjectRpi/Rpi/rpiData.txt &"
+
+# txt config bash file
+alias txtConfigBash="gedit /home/rpissb/.bashrc &"
+
+
 cd ~/ProjectRpi/Rpi/RpiCameraV01
 
 // python virtual envirmment
@@ -27,9 +39,6 @@ ip addr
 
 // Config Rpi
 sudo raspi-config 
-
-// tempMeasurementScript
-lxterminal -e "python ProjectRpi/Rpi/Background/tempMeasurement.py"
 
 // Rpi cam preview for 10 sec
 rpicam-hello --timeout 10000
