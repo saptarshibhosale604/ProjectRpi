@@ -24,12 +24,14 @@ try:
 		print(f"CPU Temperature: {tempValue}°C")
 		
 		# Turning fan on depend upon the temperature
-		if(tempValue >= 60):
-			fanLine.set_value(1)
+		if(tempValue >= 70):
 			print("Fan ON")
-		else:
-			fanLine.set_value(0)
+			fanLine.set_value(1)
+		elif(tempValue <= 60):
 			print("Fan OFF")
+			fanLine.set_value(0)
+		else:
+			print("Nothing")
 						
 finally:
    fanLine.release()
