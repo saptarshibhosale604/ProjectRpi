@@ -1,20 +1,17 @@
 #Import the necessary Packages for this software to run
 import mediapipe
 import cv2
+from picamera2 import Picamera2
 
 print("initialized")
 #Use MediaPipe to draw the hand framework over the top of hands it identifies in Real-Time
 drawingModule = mediapipe.solutions.drawing_utils
 handsModule = mediapipe.solutions.hands
 
-#Use CV2 Functionality to create a Video stream and add some values
-cap = cv2.VideoCapture(0)
-
-if not cap.isOpened():
-    print("Error: Could not open the camera.")
-    exit()
-            
-fourcc = cv2.VideoWriter_fourcc('m', 'p', '4', 'v')
+picam2 = Picamera2()
+picam2.start()            
+ 
+# ~ fourcc = cv2.VideoWriter_fourcc('m', 'p', '4', 'v')
 
 #Add confidence values and extra settings to MediaPipe hand tracking. As we are using a live video stream this is not a static
 #image mode, confidence values in regards to overall detection and tracking and we will only let two hands be tracked at the same time
@@ -23,10 +20,15 @@ with handsModule.Hands(static_image_mode=False, min_detection_confidence=0.7, mi
 
 #Create an infinite loop which will produce the live feed to our desktop and that will search for hands
      while True:
-           ret, frame = cap.read()
-           if not ret or frame is None:
-                print("Error: Failed to capture a frame.")
-                pbreak
+          
+           frame = picam2.capture_array()  
+           
+           # Convert the 4-channel image (BGRA) to a 3-channel image (BGR)
+           if frame.shape[2] == 4:
+	             frame = cv2.cvtColor(frame, cv2.COLOR_BGRA2BGR)
+           
+           print(frame.shape) 
+            
            #Unedit the below line if your live feed is produced upsidedown
            #flipped = cv2.flip(frame, flipCode = -1)
            
@@ -42,15 +44,15 @@ with handsModule.Hands(static_image_mode=False, min_detection_confidence=0.7, mi
                   drawingModule.draw_landmarks(frame1, handLandmarks, handsModule.HAND_CONNECTIONS)
                   
                   #   Added Code to find Location of Index Finger !!
-                  #for point in handsModule.HandLandmark:
+                  for point in handsModule.HandLandmark:
                       
-                      #normalizedLandmark = handLandmarks.landmark[point]
-                      #pixelCoordinatesLandmark= drawingModule._normalized_to_pixel_coordinates(normalizedLandmark.x, normalizedLandmark.y, 640, 480)
+                      normalizedLandmark = handLandmarks.landmark[point]
+                      pixelCoordinatesLandmark= drawingModule._normalized_to_pixel_coordinates(normalizedLandmark.x, normalizedLandmark.y, 640, 480)
                       
-                      #if point == 8:
-                          #print(point)
-                          #print(pixelCoordinatesLandmark)
-                          #print(normalizedLandmark)
+                      if point == 8:
+                          print(point)
+                          print(pixelCoordinatesLandmark)
+                          print(normalizedLandmark)
             
            #Below shows the current frame to the desktop 
            cv2.imshow("Frame", frame1);
