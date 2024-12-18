@@ -11,8 +11,14 @@ alias txtRpiData="gedit /home/rpissb/ProjectRpi/Rpi/rpiData.txt &"
 # txt config bash file
 alias txtConfigBash="gedit /home/rpissb/.bashrc &"
 
+# Restart GUI
+alias restartLightdm="sudo systemctl restart lightdm"
+
 
 cd ~/ProjectRpi/Rpi/RpiCameraV01
+
+cd ~/ProjectRpi/Rpi/ChatBot
+
 
 // python virtual envirmment
 source envHandDetection/bin/activate
@@ -52,10 +58,6 @@ rpicam-hello --lores-width 128 --lores-height 96 --post-process-file motion_dete
 rpicam-jpeg --output img.jpg --lores-width 128 --lores-height 96 --post-process-file motion_detect.json --timeout 10000
 
 Sensor: /base/axi/pcie@120000/rp1/i2c@88000/ov5647@36 - Selected sensor format: 1296x972-SGBRG10_1X10 - Selected CFE format: 1296x972-PC1g
-
-
-
-
 
 
 
