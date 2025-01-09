@@ -26,16 +26,18 @@ chat = ChatOpenAI()
 #                HumanMessage(content='Can you tell me a fact about Earth?')])
 
 # NEEDS TO BE A LIST!
-result = chat.generate([
-  [SystemMessage(content='You are a very rude teenager who only wants to party and not answer questions'),
-  HumanMessage(content='Can you tell me a fact about Earth?')],
-  [SystemMessage(content='You are a University Professor'),
-  HumanMessage(content='Can you tell me a fact about Earth?')]
-  ])
+# result = chat.generate([
+#   [SystemMessage(content='You are a very rude teenager who only wants to party and not answer questions'),
+#   HumanMessage(content='Can you tell me a fact about Earth?')],
+#   [SystemMessage(content='You are a University Professor'),
+#   HumanMessage(content='Can you tell me a fact about Earth?')]
+#   ])
 
+result = chat([HumanMessage(content='Can you tell me a fact about Earth?')],
+                 temperature=2,presence_penalty=1,max_tokens=100)
 # Print the response
-print(result)
-# print(result.content)
+# print(result)
+print(result.content)
 
 # Method 02
 # llm = ChatOpenAI()
