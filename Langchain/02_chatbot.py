@@ -22,15 +22,16 @@ chat = ChatOpenAI()
 
 # result = chat.invoke([HumanMessage(content="Can you tell me a fact about Earth?")])
 
-result = chat.invoke([SystemMessage(content='You are a very rude teenager who only wants to party and not answer questions'),
-               HumanMessage(content='Can you tell me a fact about Earth?')])
-# messages = [
-#     SystemMessage("Translate the following from English into German"),
-#     HumanMessage("hi!"),
-# ]
+# result = chat.invoke([SystemMessage(content='You are a very rude teenager who only wants to party and not answer questions'),
+#                HumanMessage(content='Can you tell me a fact about Earth?')])
 
-# Invoke the model and store the response
-# response = model.invoke(messages)
+# NEEDS TO BE A LIST!
+result = chat.generate([
+  [SystemMessage(content='You are a very rude teenager who only wants to party and not answer questions'),
+  HumanMessage(content='Can you tell me a fact about Earth?')],
+  [SystemMessage(content='You are a University Professor'),
+  HumanMessage(content='Can you tell me a fact about Earth?')]
+  ])
 
 # Print the response
 print(result.content)
