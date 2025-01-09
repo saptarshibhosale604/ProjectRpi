@@ -5,10 +5,10 @@ import os
 from langchain_openai import ChatOpenAI
 from langchain_core.messages import HumanMessage, SystemMessage
 
-#myTestKey03 
+# myTestKey04
 
 if not os.environ.get("OPENAI_API_KEY"):
-  os.environ["OPENAI_API_KEY"] = "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"
+  os.environ["OPENAI_API_KEY"] = "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"
 
 # # ~ model = ChatOpenAI(model="gpt-4o-mini")
 # model = ChatOpenAI(model="gpt-3.5-turbo")
