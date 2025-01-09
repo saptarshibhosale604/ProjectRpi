@@ -43,7 +43,8 @@ chat = ChatOpenAI()
 llm = ChatOpenAI()
 # response = llm.invoke("Here is a fun fact about Pluto:")
 from langchain.cache import InMemoryCache
-langchain.llm_cache = InMemoryCache()
+# langchain.llm_cache = InMemoryCache()
+langchain_core.caches = InMemoryCache()
 
 # The first time, it is not yet in cache, so it should take longer
 print("Here01")
