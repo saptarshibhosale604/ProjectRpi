@@ -43,18 +43,17 @@ chat = ChatOpenAI()
 llm = ChatOpenAI()
 # response = llm.invoke("Here is a fun fact about Pluto:")
 from langchain_core.caches import InMemoryCache
-# from langchain.cache import InMemoryCache
-# langchain.llm_cache = InMemoryCache()
-langchain_core.caches = InMemoryCache()
+
+set_llm_cache(InMemoryCache())
 
 # The first time, it is not yet in cache, so it should take longer
 print("Here01")
-response01 = llm.predict("Tell me a fact about Mars")
+response01 = llm.invoke("Tell me a fact about Mars")
 print("response01:", response01)
 
 delay(5000)
 print("Here02")
-response02 = llm.predict("Tell me a fact about Mars")
+response02 = llm.invoke("Tell me a fact about Mars")
 print("response02:", response01)
 
 # # Print the response
