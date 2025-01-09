@@ -16,13 +16,14 @@ if not os.environ.get("OPENAI_API_KEY"):
 #     HumanMessage("hi!"),
 # ]
 
-# # Invoke the model and store the response
+# Invoke the model and store the response
 # response = model.invoke(messages)
+response = ChatOpenAI.invoke("Here is a fun fact about Pluto:")
 
-# # Print the response
-# print(response)
+# Print the response
+print(response)
 
-llm = ChatOpenAI(openai_api_key=os.environ["OPENAI_API_KEY"])
+# llm = ChatOpenAI(openai_api_key=os.environ["OPENAI_API_KEY"])
 
-print(llm('Here is a fun fact about Pluto:'))
+# print(llm('Here is a fun fact about Pluto:'))
 
