@@ -4,10 +4,14 @@ import os
 from langchain_openai import ChatOpenAI
 from langchain_core.messages import HumanMessage, SystemMessage
 
-# myTestKey06
+# myTestKey07
+f = open('openai_api_key.txt')
+# api_key = f.read()
+
+print("openai_api_key: ", f.read())
 
 if not os.environ.get("OPENAI_API_KEY"):
-  os.environ["OPENAI_API_KEY"] = "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"
+  os.environ["OPENAI_API_KEY"] = f.read()
 
 # ~ model = ChatOpenAI(model="gpt-4o-mini")
 model = ChatOpenAI(model="gpt-3.5-turbo")
