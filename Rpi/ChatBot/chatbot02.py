@@ -22,7 +22,7 @@ if not os.environ.get("OPENAI_API_KEY"):
 # # Print the response
 # print(response)
 
-llm = ChatOpenAI(openai_api_key=api_key)
+llm = ChatOpenAI(openai_api_key=os.environ["OPENAI_API_KEY"])
 
 print(llm('Here is a fun fact about Pluto:'))
 
