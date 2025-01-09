@@ -1,4 +1,4 @@
-
+import time
 import os
 from langchain_openai import ChatOpenAI
 from langchain_core.messages import HumanMessage, SystemMessage, AIMessage
@@ -52,7 +52,9 @@ print("Here01")
 response01 = llm.invoke("Tell me a fact about Mars")
 print("response01:", response01)
 
-delay(5000)
+# Delay for 5 seconds
+time.sleep(5)
+
 print("Here02")
 response02 = llm.invoke("Tell me a fact about Mars")
 print("response02:", response01)
