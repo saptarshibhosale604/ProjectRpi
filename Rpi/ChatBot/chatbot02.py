@@ -11,7 +11,7 @@ f = open('openai_api_key.txt')
 # print("openai_api_key: ", f.read())
 
 if not os.environ.get("OPENAI_API_KEY"):
-  os.environ["OPENAI_API_KEY"] = f.read()
+  os.environ["OPENAI_API_KEY"] = f.read().strip() 
 
 # ~ model = ChatOpenAI(model="gpt-4o-mini")
 model = ChatOpenAI(model="gpt-3.5-turbo")
