@@ -38,7 +38,9 @@ print("inputVars:", chat_prompt.input_variables)
 
 # get a chat completion from the formatted messages
 request = chat_prompt.format_prompt(cooking_time="5 min", dietary_preference="veg", recipe_request="maggie").to_messages()
-# result = chat.invoke([HumanMessage(content="Can you tell me a fact about Earth?")])
+
+print("request:", request)
+
 result = chat.invoke(request)
 
 print("result:::::", result)
