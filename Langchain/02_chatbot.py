@@ -20,8 +20,10 @@ if not os.environ.get("OPENAI_API_KEY"):
 # model = ChatOpenAI(model="gpt-3.5-turbo")
 chat = ChatOpenAI()
 
-result = chat.invoke([HumanMessage(content="Can you tell me a fact about Earth?")])
+# result = chat.invoke([HumanMessage(content="Can you tell me a fact about Earth?")])
 
+result = chat.invoke([SystemMessage(content='You are a very rude teenager who only wants to party and not answer questions'),
+               HumanMessage(content='Can you tell me a fact about Earth?')])
 # messages = [
 #     SystemMessage("Translate the following from English into German"),
 #     HumanMessage("hi!"),
