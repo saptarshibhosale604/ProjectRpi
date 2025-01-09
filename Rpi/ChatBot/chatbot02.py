@@ -22,9 +22,11 @@ messages = [
 ]
 
 # Invoke the model and store the response
-response = model.invoke(messages)
-# llm = ChatOpenAI()
-# response = ChatOpenAI().invoke("Here is a fun fact about Pluto:")
+# response = model.invoke(messages)
+
+# response = model.invoke(messages)
+llm = ChatOpenAI()
+response = llm.invoke("Here is a fun fact about Pluto:")
 
 # Print the response
 print(response)
