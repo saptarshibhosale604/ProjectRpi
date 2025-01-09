@@ -34,7 +34,8 @@ result = chat.generate([
   ])
 
 # Print the response
-print(result.content)
+print(result)
+# print(result.content)
 
 # Method 02
 # llm = ChatOpenAI()
