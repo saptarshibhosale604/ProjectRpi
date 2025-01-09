@@ -42,7 +42,8 @@ chat = ChatOpenAI()
 # Method 02
 llm = ChatOpenAI()
 # response = llm.invoke("Here is a fun fact about Pluto:")
-from langchain.cache import InMemoryCache
+from langchain_core.caches import InMemoryCache
+# from langchain.cache import InMemoryCache
 # langchain.llm_cache = InMemoryCache()
 langchain_core.caches = InMemoryCache()
 
