@@ -8,7 +8,7 @@ from langchain_core.messages import HumanMessage, SystemMessage
 f = open('openai_api_key.txt')
 # api_key = f.read()
 
-print("openai_api_key: ", f.read())
+# print("openai_api_key: ", f.read())
 
 if not os.environ.get("OPENAI_API_KEY"):
   os.environ["OPENAI_API_KEY"] = f.read()
