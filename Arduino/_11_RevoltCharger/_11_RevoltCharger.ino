@@ -2,8 +2,8 @@
 // Depending on the blinking of the LED detected the charging is Restarted
 // Multiple BT modes: PrintModes, ChargingModes
 
-int energyMeterLED_LDR = D5;  // Energy Meter LED reader LDR module input pin
-int chargerRelayModule = D6;  // Charger power circuit relay module output pin
+int energyMeterLED_LDR = D8;  // Energy Meter LED reader LDR module input pin
+int chargerRelayModule = D7;  // Charger power circuit relay module output pin
 
 
 
