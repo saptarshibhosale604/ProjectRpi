@@ -27,8 +27,8 @@ if not os.environ.get("OPENAI_API_KEY"):
 # response = model.invoke(messages)
 
 llm = ChatOpenAI()
-# response = llm.invoke(["Here is a fun fact about Pluto:", "Here is a fun fact about mars:"])
-response = llm.invoke.generate(["Here is a fun fact about Pluto:", "Here is a fun fact about mars:"])
+response = llm.invoke("Here is a fun fact about Pluto:")
+# response = llm.invoke.generate(["Here is a fun fact about Pluto:", "Here is a fun fact about mars:"])
 
 # Print the response
 print(response)
