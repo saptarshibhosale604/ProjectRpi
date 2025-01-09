@@ -33,15 +33,27 @@ chat = ChatOpenAI()
 #   HumanMessage(content='Can you tell me a fact about Earth?')]
 #   ])
 
-result = chat([HumanMessage(content='Can you tell me a fact about Earth?')],
-                 temperature=2,presence_penalty=1,max_tokens=100)
+# result = chat.invoke([HumanMessage(content='Can you tell me a fact about Earth?')],
+#                  temperature=2,presence_penalty=2,max_tokens=10)
 # Print the response
 # print(result)
-print(result.content)
+# print(result.content)
 
 # Method 02
-# llm = ChatOpenAI()
+llm = ChatOpenAI()
 # response = llm.invoke("Here is a fun fact about Pluto:")
+from langchain.cache import InMemoryCache
+langchain.llm_cache = InMemoryCache()
+
+# The first time, it is not yet in cache, so it should take longer
+print("Here01")
+response01 = llm.predict("Tell me a fact about Mars")
+print("response01:", response01)
+
+delay(5000)
+print("Here02")
+response02 = llm.predict("Tell me a fact about Mars")
+print("response02:", response01)
 
 # # Print the response
 # print(response)
