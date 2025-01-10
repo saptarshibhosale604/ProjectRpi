@@ -68,9 +68,11 @@ print("\n\n## router_chain ##:", router_chain)
 print("\n\n## chain ##:", chain)
 
 print("\n\n## How do magnets work? ##:")
-chain.run("How do magnets work?")
+result01 = chain.run("How do magnets work?")
+print("\n\n## result01 ##:", result01)
 
-print("\n\n## what's a quantum entaglement ##:")
-chain.run("what's a quantum entaglement?")
+print("\n\n## Describe the Standard Model of particle physics")
+result02 = chain.run("Describe the Standard Model of particle physics")
+print("\n\n## result02 ##:", result02)
 
 
