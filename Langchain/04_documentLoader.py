@@ -55,7 +55,7 @@ def answer_question_about(person_name,question):
     chat_prompt = ChatPromptTemplate.from_messages([human_prompt])
     
     #result
-    result = model(chat_prompt.format_prompt(question=question,document=context_text).to_messages())
+    result = model.invoke(chat_prompt.format_prompt(question=question,document=context_text).to_messages())
     
     print(result.content)
 
