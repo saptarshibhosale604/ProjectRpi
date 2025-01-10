@@ -1,6 +1,6 @@
 
 from langchain_openai import ChatOpenAI
-from langchain_community.chroma import Chroma
+from langchain_community.vectorstores import Chroma
 from langchain_community.document_loaders import TextLoader
 from langchain_openai import OpenAIEmbeddings
 from langchain_text_splitters import CharacterTextSplitter
