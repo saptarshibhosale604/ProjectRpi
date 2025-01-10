@@ -56,3 +56,4 @@ def us_constitution_helper(question):
     print("\n\n## embedding_function ##:",embedding_function)
     print("\n\n## db ##:",db)
     
+us_constitution_helper("What was the 1st amendment?")
