@@ -55,7 +55,7 @@ def us_constitution_helper(question):
 
     retriever = db_connection.as_retriever()
     search_kwargs = {"score_threshold":0.8,"k":4}
-    docs = retriever.get_relevant_documents(Question, search_kwargs=search_kwargs)
+    docs = retriever.get_relevant_documents(question, search_kwargs=search_kwargs)
 
     print("\n\n## len(docs) ##:",len(docs))
     print("\n\n## docs[0].page_content ##:",docs[0].page_content)
