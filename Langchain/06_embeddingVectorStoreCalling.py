@@ -1,6 +1,6 @@
 
 from langchain_openai import ChatOpenAI
-from langchain_community.vectorstores import Chroma
+from langchain_chroma import Chroma
 from langchain_community.document_loaders import TextLoader
 from langchain_openai import OpenAIEmbeddings
 from langchain_text_splitters import CharacterTextSplitter
@@ -49,13 +49,16 @@ def us_constitution_helper(question):
     # print("\n\n## db ##:",db)
 
     # PART FOUR
-    # return most relevent documents NO OPENAI, ONLY EMBEDDING / VECTOR DB
+    # return most relevent documents 
     embedding_function = OpenAIEmbeddings()    
     db_connection = Chroma(persist_directory='./US_Constitution',embedding_function=embedding_function)
-
-    retriever = db_connection.as_retriever()
+    print("\n\n## embedding_function ##:",embedding_function)
+    print("\n\n## db_connection ##:",db_connection)
+    
+    # retriever = db_connection.as_retriever()
     # search_kwargs = {"score_threshold":0.8,"k":4}
     # docs = retriever.get_relevant_documents(question, search_kwargs=search_kwargs)
+    # docs = retriever.get_relevant_documents(question)
     docs = retriever.get_relevant_documents(question)
 
     print("\n\n## len(docs) ##:",len(docs))
