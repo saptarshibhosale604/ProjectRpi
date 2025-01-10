@@ -54,7 +54,7 @@ def us_constitution_helper(question):
                                                            base_retriever=db_connection.as_retriever())
 
     compressed_docs = compression_retriever.get_relevant_documents(question)
-
-    print(compressed_docs[0].page_content)
+    print("\n\n## compressed_docs ##:",compressed_docs)
+    print("\n\n## compressed_docs[0].page_content ##:",compressed_docs[0].page_content)
     
 us_constitution_helper("What was the 1st amendment?")
