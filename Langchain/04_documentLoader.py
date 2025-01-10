@@ -41,6 +41,9 @@ def answer_question_about(person_name,question):
     # Get Wikipedia Article
     docs = WikipediaLoader(query=person_name,load_max_docs=1)
     context_text = docs.load()[0].page_content
+
+    print("\n\n## docs ##:",docs)
+    print("\n\n## context_text ##:",context_text)
     
     # Connect to OpenAI Model
     # myTestKey07 #saptarshibhosale604@gmail.com
@@ -48,14 +51,19 @@ def answer_question_about(person_name,question):
     api_key = f.read().strip()
     model = ChatOpenAI(openai_api_key=api_key)
     
+    print("\n\n## model ##:",model)
+    
     # Ask Model Question
     human_prompt = HumanMessagePromptTemplate.from_template('Answer this question\n{question}, here is some extra context:\n{document}')
+    print("\n\n## human_prompt ##:",human_prompt)
     
     # Assemble chat prompt
     chat_prompt = ChatPromptTemplate.from_messages([human_prompt])
+    print("\n\n## chat_prompt ##:",chat_prompt)
     
     #result
     result = model.invoke(chat_prompt.format_prompt(question=question,document=context_text).to_messages())
+    print("\n\n## docs ##:",docs)
     
     print(result.content)
 
