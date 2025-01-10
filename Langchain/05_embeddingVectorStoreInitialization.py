@@ -11,7 +11,7 @@
 from langchain_openai import ChatOpenAI
 from langchain_community.vectorstores import Chroma
 from langchain_community.document_loaders import TextLoader
-from langchain_community.embeddings.openai import OpenAIEmbeddings
+from langchain_openai import OpenAIEmbeddings
 from langchain_text_splitters import CharacterTextSplitter
 from langchain.retrievers import ContextualCompressionRetriever
 from langchain.retrievers.document_compressors import LLMChainExtractor 
@@ -53,7 +53,7 @@ def us_constitution_helper(question):
     # EMBED THE Documents (now in chunks) to a persisted ChromaDB
     embedding_function = OpenAIEmbeddings()
     db = Chroma.from_documents(docs, embedding_function,persist_directory='./US_Constitution')
-    db.persist()
+    # db.persist() # old method
     print("\n\n## embedding_function ##:",embedding_function)
     print("\n\n## db ##:",db)
     
