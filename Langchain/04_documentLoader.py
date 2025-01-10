@@ -6,10 +6,10 @@ data = loader.load()
 
 # print(data)
 
-print("type:",type(data))
+print("type::",type(data))
 
-print("data0:",data[0])
+print("data0::",data[0])
 
-print("data1:",data[1])
+print("data1::",data[1])
 
-print("data0content:",data[0].page_content)
+print("data0content::",data[0].page_content)
