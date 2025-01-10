@@ -49,7 +49,14 @@ destinations_str = "\n".join(destinations)
 print("\n\n## destinations ##:", destinations)
 print("\n\n## destinations_str ##:", destinations_str)
 
-
+router_template = MULTI_PROMPT_ROUTER_TEMPLATE.format(
+    destinations=destinations_str
+)
+router_prompt = PromptTemplate(
+    template=router_template,
+    input_variables=["input"],
+    output_parser=RouterOutputParser(),
+)
 
 router_chain = LLMRouterChain.from_llm(llm, router_prompt)
 chain = MultiPromptChain(router_chain=router_chain, 
