@@ -46,7 +46,7 @@ def us_constitution_helper(question):
     docs = text_splitter.split_documents(documents)
     print("\n\n## text_splitter ##:",text_splitter)
     print("\n\n## len(docs) ##:",len(docs))
-    print("\n\n## len(docs[0]) ##:",len(docs[0]))
+    print("\n\n## len(docs[0].page_content) ##:",len(docs[0].page_content))
     print("\n\n## docs[0] ##:",docs[0])
     
     # PART THREE
