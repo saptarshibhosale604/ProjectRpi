@@ -38,14 +38,15 @@ def us_constitution_helper(question):
     loader = TextLoader("./US_Constitution.txt")
     documents = loader.load()
     print("\n\n## loader ##:",loader)
-    print("\n\n## documents ##:",documents)
+    print("\n\n## len(documents) ##:",len(documents))
     
     # PART TWO
     # Split the document into chunks (you choose how and what size)
     text_splitter = CharacterTextSplitter.from_tiktoken_encoder(chunk_size=500)
     docs = text_splitter.split_documents(documents)
     print("\n\n## text_splitter ##:",text_splitter)
-    print("\n\n## docs ##:",docs)
+    print("\n\n## len(docs) ##:",len(docs))
+    print("\n\n## len(docs[0]) ##:",len(docs[0]))
     print("\n\n## docs[0] ##:",docs[0])
     
     # PART THREE
