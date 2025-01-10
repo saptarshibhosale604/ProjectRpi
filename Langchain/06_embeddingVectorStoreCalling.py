@@ -25,8 +25,17 @@ def us_constitution_helper(question):
     Follow the steps below to fill out this function:
     '''
     
-    # PART FOUR
-    # return most relevent documents 
+    # PART FOUR.01
+    # return most relevent documents, via db_connection only 01 
+    # embedding_function = OpenAIEmbeddings()    
+    # db_connection = Chroma(persist_directory='./US_Constitution',embedding_function=embedding_function)
+    # docs = db_connection.similarity_search(question)
+    # print("\n\n## embedding_function ##:",embedding_function)
+    # print("\n\n## db_connection ##:",db_connection)
+    # print("\n\n## docs ##:",docs)
+
+    # PART FOUR.02
+    # return most relevent documents, via db_connection.retriever 02 
     # embedding_function = OpenAIEmbeddings()    
     # db_connection = Chroma(persist_directory='./US_Constitution',embedding_function=embedding_function)
     # print("\n\n## embedding_function ##:",embedding_function)
