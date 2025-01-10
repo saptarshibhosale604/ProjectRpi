@@ -1,6 +1,6 @@
 from langchain.document_loaders import CSVLoader
 
-loader = CSVLoader('/penguins.csv')
+loader = CSVLoader('./penguins.csv')
 
 data = loader.load()
 
