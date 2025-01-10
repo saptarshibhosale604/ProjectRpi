@@ -54,8 +54,9 @@ def us_constitution_helper(question):
     db_connection = Chroma(persist_directory='./US_Constitution',embedding_function=embedding_function)
 
     retriever = db_connection.as_retriever()
-    search_kwargs = {"score_threshold":0.8,"k":4}
-    docs = retriever.get_relevant_documents(question, search_kwargs=search_kwargs)
+    # search_kwargs = {"score_threshold":0.8,"k":4}
+    # docs = retriever.get_relevant_documents(question, search_kwargs=search_kwargs)
+    docs = retriever.get_relevant_documents(question)
 
     print("\n\n## len(docs) ##:",len(docs))
     print("\n\n## docs[0].page_content ##:",docs[0].page_content)
