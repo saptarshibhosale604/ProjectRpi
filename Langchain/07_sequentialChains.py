@@ -1,6 +1,7 @@
 from langchain_openai  import ChatOpenAI
 from langchain.prompts import ChatPromptTemplate
 from langchain.chains import SequentialChain, LLMChain
+import os
 
 # myTestKey07 #saptarshibhosale604@gmail.com
 f = open('openai_api_key.txt')
