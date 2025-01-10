@@ -45,7 +45,7 @@ def answer_question_about(person_name,question):
     # Connect to OpenAI Model
     # myTestKey07 #saptarshibhosale604@gmail.com
     f = open('openai_api_key.txt')
-    api_key = f.read()
+    api_key = f.read().strip()
     model = ChatOpenAI(openai_api_key=api_key)
     
     # Ask Model Question
