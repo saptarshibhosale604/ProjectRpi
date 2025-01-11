@@ -1,6 +1,6 @@
 from langchain_openai import ChatOpenAI
 from langchain.chains import ConversationChain
-from langchain.memory import ConversationSummayBufferMemory
+from langchain.memory import ConversationSummaryBufferMemory
 import pickle
 
 import os
