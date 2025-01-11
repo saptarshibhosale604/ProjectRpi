@@ -15,7 +15,7 @@ if not os.environ.get("OPENAI_API_KEY"):
 llm = ChatOpenAI(temperature=0.0)
 memory = ConversationSummaryBufferMemory(llm=llm, max_token_limit=100)
 
-conversation = ConverstionChain(llm=llm, memory=memory)
+conversation = ConversationChain(llm=llm, memory=memory)
 
 conversation.predict("Give me 4 sentence travel plan for mumbai")
 
