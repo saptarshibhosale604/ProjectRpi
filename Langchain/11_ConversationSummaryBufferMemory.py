@@ -1,3 +1,6 @@
+# The code is not functioning because of the error
+# But can be working with langchain newer version adaptation
+
 from langchain_openai import ChatOpenAI
 from langchain.chains import ConversationChain
 from langchain.memory import ConversationSummaryBufferMemory
