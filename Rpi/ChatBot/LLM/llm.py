@@ -47,7 +47,7 @@ def Main(userInput):
 	if(debug01): print("Response: " + response.text)
 	return response.text
  
-print(Main("Hey there"))
+# ~ print(Main("Hey there"))
 
 # # Output
 # # 2 + 2 = 4

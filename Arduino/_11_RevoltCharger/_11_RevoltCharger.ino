@@ -5,6 +5,8 @@
 int energyMeterLED_LDR = D8;  // Energy Meter LED reader LDR module input pin
 int chargerRelayModule = D7;  // Charger power circuit relay module output pin
 
+int ldrEnergySupply = D5;  // Supply to ldr module
+
 
 
 // Charging status checking per sec
@@ -49,14 +51,19 @@ bool debug02 = 0; // For showing function names
 bool debug03 = 0; // For inside function
 
 void setup() {
+  pinMode(energyMeterLED_LDR, INPUT);
+  pinMode(chargerRelayModule, OUTPUT);
+  pinMode(ldrEnergySupply, OUTPUT);
+  digitalWrite(chargerRelayModule, LOW);   // Start the charging
+  digitalWrite(ldrEnergySupply, LOW);   // Stop the LDR module supply
+  
   Serial.begin(9600);               // initialize serial monitor
   if(debug02) Serial.println("setup()");
   delay(1000);
   Serial.println("Initialized");
 
-  pinMode(energyMeterLED_LDR, INPUT);
-  pinMode(chargerRelayModule, OUTPUT);
-  digitalWrite(chargerRelayModule, LOW);   // Start the charging
+  digitalWrite(ldrEnergySupply, HIGH);   // Start the LDR module supply
+  
 
   // ConnectWifi();
 

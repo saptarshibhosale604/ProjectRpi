@@ -1,7 +1,0 @@
-free -h # RAM.
-df -h # ROM
-top -bn1 | grep "Cpu(s)" # CPU
-scrot ~/Pictures/Screenshots/my_screenshot.png # screenshot of entire screen
-scrot -s ~/Pictures/Screenshots/my_screenshot.png # specific window screenshot
-du -h --max-depth=1 # show size of current dir and subdir
-

@@ -1,2 +1,11 @@
 *.zip
 _exclude_*
+Logs/*
+
+Arduino/libraries/
+
+Langchain/US_Constitution/
+Langchain/openai_api_key.txt
+
+__pycache__
+
