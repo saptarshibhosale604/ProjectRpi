@@ -143,7 +143,7 @@ for event in events:
 
 
 snapshot = graph.get_state(config)
-print(snapshot)
+print("## ##snapshot:", snapshot)
 
 
 # from langchain_core.messages import BaseMessage
