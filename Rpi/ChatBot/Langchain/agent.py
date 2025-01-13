@@ -63,7 +63,12 @@ config = {"configurable": {"thread_id": "thread-1"}}
 loopCounter = 0
 
 ## graph and agent
-graph 
+graph = create_react_agent(
+	llm, 
+	tools, 
+	interrupt_before=["tools"], 
+	checkpointer=MemorySaver()
+) 
 
 def RefreshGraph():
 	graph = create_react_agent(
