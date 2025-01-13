@@ -115,8 +115,9 @@ def Main():
 			logger.info(f"userInputWithDefinedRole: {userInput}")
 			
 			# Getting responce from LLM model
-			# llmResponce = LLM.Main(userInput)	
-		      	agentResponce = Agent.Main(userInput)
+			# llmResponce = LLM.Main(userInput)
+			
+			agentResponce = Agent.Main(userInput)
 			logger.info(f"llmResponce: {llmResponce}")
 						
 			# ~ # Text to speech
