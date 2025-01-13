@@ -96,6 +96,23 @@ memory = SqliteSaver.from_conn_string(":memory:")
 
 # STEP 5: Compile the graph
 graph = graph_builder.compile(checkpointer=memory)
+
+
+from IPython.display import Image, display
+
+try:
+    img_data = graph.get_graph().draw_mermaid_png()
+    
+    # Save the image to a file
+    img_path = 'Img/output_image02.png'  # Specify the desired output file name
+    with open(img_path, 'wb') as f:
+        f.write(img_data)  # Write the image data to the file
+        print(f"Graph image is saved: {img_path}")
+
+except Exception as e:
+    print(f"An error occurred: {e}")
+
+
 # MEMORY CODE CONTINUES ===
 # Now we can run the chatbot and see how it behaves
 # PICK A TRHEAD FIRST
@@ -126,21 +143,6 @@ for event in events:
 
 snapshot = graph.get_state(config)
 print(snapshot)
-
-
-from IPython.display import Image, display
-
-try:
-    img_data = graph.get_graph().draw_mermaid_png()
-    
-    # Save the image to a file
-    img_path = 'Img/output_image02.png'  # Specify the desired output file name
-    with open(img_path, 'wb') as f:
-        f.write(img_data)  # Write the image data to the file
-        print(f"Graph image is saved: {img_path}")
-
-except Exception as e:
-    print(f"An error occurred: {e}")
 
 
 # from langchain_core.messages import BaseMessage
