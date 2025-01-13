@@ -29,7 +29,7 @@ llm = ChatOpenAI(model="gpt-3.5-turbo", max_tokens=500, temperature=0, max_retri
 
 ## Initializing tools
 
-toolShell = toolShell(ask_human_input=False, verbose=True)
+toolShell = ShellTool(ask_human_input=False, verbose=True)
 toolShell.description = toolShell.description + f"args {toolShell.args}".replace("{", "{{").replace("}", "}}")
 
 toolYoutube = YouTubeSearchTool()
