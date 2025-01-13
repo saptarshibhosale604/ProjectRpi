@@ -57,23 +57,13 @@ graph = graph_builder.compile()
 # print(res["messages"])
 from IPython.display import Image, display
 
-# try:
-#     display(Image(graph.get_graph().draw_mermaid_png()))
-# except Exception:
-#     # This requires some extra dependencies and is optional
-#     pass
-
-# Assuming graph.get_graph().draw_mermaid_png() returns the image data
 try:
     img_data = graph.get_graph().draw_mermaid_png()
     
     # Save the image to a file
-    img_path = 'output_image01.png'  # Specify the desired output file name
+    img_path = 'Img/output_image01.png'  # Specify the desired output file name
     with open(img_path, 'wb') as f:
         f.write(img_data)  # Write the image data to the file
-
-    # Open the image using the default image viewer
-    # os.system(f'xdg-open {img_path}')  # This works on most Linux distributions
 
 except Exception as e:
     print(f"An error occurred: {e}")
