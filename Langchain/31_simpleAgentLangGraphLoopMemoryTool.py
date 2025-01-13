@@ -142,6 +142,17 @@ for event in events:
     event["messages"][-1].pretty_print()
 
 
+user_input = "tell me about langchain"
+
+# The config is the **second positional argument** to stream() or invoke()!
+events = graph.stream(
+    {"messages": [("user", user_input)]}, config, stream_mode="values"
+)
+
+for event in events:
+    event["messages"][-1].pretty_print()
+
+
 snapshot = graph.get_state(config)
 print("## ##snapshot:", snapshot)
 
