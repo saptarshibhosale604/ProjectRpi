@@ -71,8 +71,8 @@ def Main():
 	global conversationMode
 	
 	# Getting user input
-	userInput = "Hey there how its going on?" # sample 
-	# ~ userInput = input("userInput: ")	# Text 
+	# userInput = "Hey there how its going on?" # sample 
+	userInput = input("userInput: ")	# Text 
 	# userInput = STT.Main()			# Speech To Text
 	
 	# ~ print("userInput:",userInput)	
