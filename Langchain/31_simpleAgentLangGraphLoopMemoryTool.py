@@ -24,14 +24,14 @@ tavily_key = "tvly-kX76LCz C36oih0u9COcf6oa 53A47MX0g"
 # print(result)  # Output: 1234567890
 
 
-openai_key = RemoveSpaces(openai_key)
-tavily_key = RemoveSpaces(tavily_key)
+OPENAI_API_KEY = RemoveSpaces(openai_key)
+TAVILY_API_KEY = RemoveSpaces(tavily_key)
 
 
 llm_name = "gpt-3.5-turbo"
 
 # client = OpenAI(api_key=openai_key)
-model = ChatOpenAI(api_key=openai_key, model=llm_name)
+model = ChatOpenAI(model=llm_name)
 
 
 # STEP 1: Build a Basic Chatbot
@@ -48,7 +48,7 @@ class State(TypedDict):
 graph_builder = StateGraph(State)
 
 # create tools
-tool = TavilySearchResults(api_key=tavily_key, max_results=1)
+tool = TavilySearchResults(max_results=1)
 tools = [tool]
 # rest = tool.invoke("What is the capital of France?")
 # print(rest)
