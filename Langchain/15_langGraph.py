@@ -61,6 +61,16 @@ from langgraph.prebuilt import create_react_agent
 graph = create_react_agent(model, tools=tools)
 
 
+from IPython.display import Image, display
+
+try:
+    img_data = graph.get_graph().draw_mermaid_png()
+    
+    # Save the image to a file
+    img_path = 'Img/output_image01.png'  # Specify the desired output file name
+    with open(img_path, 'wb') as f:
+        f.write(img_data)  # Write the image data to the file
+
 # ~ from IPython.display import Image, display
 
 # ~ print("\n\n## display(Image(graph. ##:")
