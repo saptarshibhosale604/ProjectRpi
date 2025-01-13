@@ -32,22 +32,51 @@ from langgraph.prebuilt import create_react_agent
 from langchain_community.tools import ShellTool
 
 # Initialize tools
-# ~ tools = ShellTool(ask_human_input=True, verbose=True)
-tools = ShellTool(ask_human_input=False, verbose=True)
-tools.description = tools.description + f"args {tools.args}".replace("{", "{{").replace("}", "}}")
-tools = [tools]
+tools = ShellTool(ask_human_input=True, verbose=True)
+shellTool = ShellTool(ask_human_input=False, verbose=True)
+shellTool.description = shellTool.description + f"args {shellTool.args}".replace("{", "{{").replace("}", "}}")
+
+tools =  [shellTool]
+# ~ tools01 = ShellTool(ask_human_input=False, verbose=True)
+
+
+
+
+
+
+
+from langchain_community.tools import YouTubeSearchTool
+
+# ~ tools += YouTubeSearchTool()
+tools += [YouTubeSearchTool()]
+
+
+
+
 # ~ print("tools:", tools)
 
-# ~ userInput = "Tell me where is 13_agentBasic.py file"
+# ~ userInput = "Tell me where is 13_agentBasic.py file in my pc"
 # ~ userInput = "step 1: Tell me where is 13_agentBasic.py file and step 2: then find other python files from same folder"
 # ~ userInput = "start a timer for 10 sec and after timer over play alarm clock sound to notify"
-userInput = "play a blue eyes youtube video on firefox"
+# ~ userInput = "play blue eyes by honey singh youtube video on the firefox app"
+# ~ userInput = "play blue eyes by honey singh youtube video using firefox cmd in background"
+# ~ userInput = "play doku punjabi song youtube video using firefox cmd in background"
+# ~ userInput = "start the stopwatch in terminal"
+# ~ userInput = "start the timer for 5 sec and notify with alarm clock sound"
+userInput = "tell me storage information"
+
+# ~ userInput = "get link for blue eyes by honey singh youtube video and then run the 1st link using only firefox cmd"
+# ~ userInput = "play blue eyes by honey singh youtube video"
 # ~ userInput = "find the location of lanchain dir and then Give me the list of python files from that langchain directory"
 # ~ userInput = "find the location of 'Lanchain' dir"
 
 
+print("## ## tools:", tools)
+
+
 from langgraph.checkpoint.memory import MemorySaver
-agent_executor = create_react_agent(llm, tools, interrupt_before=["tools"])
+# ~ agent_executor = create_react_agent(llm, tools, interrupt_before=["tools01"])
+# ~ agent_executor = create_react_agent(llm, tools)
 
 # ~ events = agent_executor.stream(
     # ~ {"messages": [("user", userInput)]},
@@ -57,6 +86,8 @@ agent_executor = create_react_agent(llm, tools, interrupt_before=["tools"])
 
 graph = create_react_agent(
      llm, tools, interrupt_before=["tools"], checkpointer=MemorySaver()
+     # ~ llm, tools, checkpointer=MemorySaver()
+     
 )
 config = {"configurable": {"thread_id": "thread-1"}}
 

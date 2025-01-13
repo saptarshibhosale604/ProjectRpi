@@ -60,7 +60,8 @@ from langgraph.prebuilt import create_react_agent
 
 agent_executor = create_react_agent(llm, tools)
 # ~ example_query = "Draft an email to fake@fake.com thanking them for coffee."
-example_query = "Draft an email to vedmantrabhosale@gmail.com about how should he aproach marketing for his chess class. Mail is from his brother Saptarshi Bhosale."
+# ~ example_query = "Draft an email to vedmantrabhosale@gmail.com about how should he aproach marketing for his chess class. Mail is from his brother Saptarshi Bhosale."
+example_query = "Draft an email to vedmantrabhosale@gmail.com about his health. Mail is from his brother Saptarshi Bhosale."
 
 events = agent_executor.stream(
     {"messages": [("user", example_query)]},
