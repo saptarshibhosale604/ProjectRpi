@@ -71,6 +71,9 @@ try:
     with open(img_path, 'wb') as f:
         f.write(img_data)  # Write the image data to the file
 
+except Exception as e:
+    print(f"An error occurred: {e}")
+
 # ~ from IPython.display import Image, display
 
 # ~ print("\n\n## display(Image(graph. ##:")
