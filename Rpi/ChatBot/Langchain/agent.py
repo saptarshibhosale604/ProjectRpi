@@ -66,7 +66,7 @@ loopCounter = 0
 graph = create_react_agent(
 	llm, 
 	tools, 
-	interrupt_before=["toolsAdvance"], 
+	interrupt_before=["tools"], 
 	checkpointer=MemorySaver()
 )
 
