@@ -10,17 +10,11 @@ from langgraph.graph import StateGraph, END
 
 # Load environment variables from .env file
 # load_dotenv()
+
 # myTestKey07 #saptarshibhosale604@gmail.com
 f = open('openai_api_key.txt')
-# print("openai_api_key: ", f.read())
-
-if not os.environ.get("OPENAI_API_KEY"):
-  os.environ["OPENAI_API_KEY"] = f.read().strip() 
-
-
+openai_key = os.environ["OPENAI_API_KEY"] = f.read().strip() 
 llm_name = "gpt-3.5-turbo"
-
-# client = OpenAI(api_key=openai_key)
 model = ChatOpenAI(api_key=openai_key, model=llm_name)
 
 
