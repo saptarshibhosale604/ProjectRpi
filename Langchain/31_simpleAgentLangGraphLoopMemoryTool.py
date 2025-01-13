@@ -48,7 +48,7 @@ class State(TypedDict):
 graph_builder = StateGraph(State)
 
 # create tools
-tool = TavilySearchResults(max_results=1)
+tool = TavilySearchResults(tavily_key=tavily_key, max_results=1)
 tools = [tool]
 # rest = tool.invoke("What is the capital of France?")
 # print(rest)
