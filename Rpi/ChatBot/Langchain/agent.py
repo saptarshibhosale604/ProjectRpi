@@ -87,9 +87,8 @@ def AgentCall(userInput):
 	inputs = {"messages": [("user", userInput)]}  # Replace with actual input
 	
 	while True:
-		loopCounter
-		[global]
-		
+		global loopCounter
+				
 		if(loopCounter == 0):
 			print_stream(graph, inputs, config)
 		else:
