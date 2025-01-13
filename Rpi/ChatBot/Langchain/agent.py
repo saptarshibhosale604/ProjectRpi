@@ -84,7 +84,7 @@ def print_stream(graph, inputs, config):
 
 
 # Main loop to process the graph
-def AgentCall(userInput)
+def AgentCall(userInput):
 	inputs = {"messages": [("user", userInput)]}  # Replace with actual input
 	
 	while True:
