@@ -118,7 +118,7 @@ def Main():
 			# llmResponce = LLM.Main(userInput)
 			
 			agentResponce = Agent.Main(userInput)
-			logger.info(f"llmResponce: {llmResponce}")
+			logger.info(f"llmResponce: {agentResponce}")
 						
 			# ~ # Text to speech
 			# TTS.Main(llmResponce)
