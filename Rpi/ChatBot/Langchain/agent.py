@@ -63,12 +63,15 @@ config = {"configurable": {"thread_id": "thread-1"}}
 loopCounter = 0
 
 ## graph and agent
-graph = create_react_agent(
-	llm, 
-	tools, 
-	interrupt_before=["tools"], 
-	checkpointer=MemorySaver()
-)
+graph 
+
+def RefreshGraph():
+	graph = create_react_agent(
+		llm, 
+		tools, 
+		interrupt_before=["tools"], 
+		checkpointer=MemorySaver()
+	)
 
 
 ## ## SCRIPTS ## ##
@@ -84,6 +87,7 @@ def print_stream(graph, inputs, config):
 
 # Main loop to process the graph
 def Main(userInput):
+	RefreshGraph()
 	inputs = {"messages": [("user", userInput)]}  # Replace with actual input
 	
 	while True:
@@ -115,6 +119,7 @@ def Main(userInput):
 			inputs = None  # Continue with the next step
 		else:
 			print("## Denied")
+			
 			break
 
 # AgentCall("Give me 1 link of youtube video of linux")
