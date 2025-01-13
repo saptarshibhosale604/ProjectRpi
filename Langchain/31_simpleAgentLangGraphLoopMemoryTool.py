@@ -10,13 +10,11 @@ from langchain_community.tools.tavily_search import TavilySearchResults
 
 
 # Load environment variables from .env file
-load_dotenv()
+# load_dotenv()
 
 def RemoveSpaces(input_string):
     # Remove spaces from the input string
     return input_string.replace(" ", "")
-
-# Example usage
 
 openai_key = "sk-proj-zP6XLa1m5gtlBcXJCaHZGmAvXEvUrP 5ATJSPBfLRdEuF-vSroLAG4V0zBdpwPz9PTXe9rM0-CgT3BlbkFJ83 AZyS7Zds5OT4G7S7MJslTok1O8P7ftX6Zz_IvdtMsy_CnjJeBoOv-o-G5t13-1Yw20ei_BwA" # myTestKey08, saptarshibhosale604@gmail.com
 tavily_key = "tvly-kX76LCz C36oih0u9COcf6oa 53A47MX0g"
