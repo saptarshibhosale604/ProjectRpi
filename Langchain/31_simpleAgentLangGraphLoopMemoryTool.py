@@ -90,10 +90,11 @@ graph_builder.set_entry_point("bot")
 # ADD MEMORY NODE
 from langgraph.checkpoint.sqlite import SqliteSaver
 
-memory = SqliteSaver.from_conn_string(":memory:")
+# memory = SqliteSaver.from_conn_string(":memory:")
 
 # STEP 5: Compile the graph
-graph = graph_builder.compile(checkpointer=memory)
+# graph = graph_builder.compile(checkpointer=memory)
+graph = graph_builder.compile()
 
 
 from IPython.display import Image, display
