@@ -24,8 +24,8 @@ tavily_key = "tvly-kX76LCz C36oih0u9COcf6oa 53A47MX0g"
 # print(result)  # Output: 1234567890
 
 
-OPENAI_API_KEY = RemoveSpaces(openai_key)
-TAVILY_API_KEY = RemoveSpaces(tavily_key)
+os.environ["OPENAI_API_KEY"] = RemoveSpaces(openai_key)
+os.environ["TAVILY_API_KEY"] = RemoveSpaces(tavily_key)
 
 
 llm_name = "gpt-3.5-turbo"
