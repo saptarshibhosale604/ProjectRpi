@@ -55,7 +55,14 @@ graph = graph_builder.compile()
 
 # res = graph.invoke({"messages": ["Hello, how are you?"]})
 # print(res["messages"])
+from IPython.display import Image, display
 
+try:
+    display(Image(graph.get_graph().draw_mermaid_png()))
+except Exception:
+    # This requires some extra dependencies and is optional
+    pass
+    
 while True:
     user_input = input("User: ")
     if user_input.lower() in ["quit", "exit", "q"]:
