@@ -39,7 +39,7 @@ logger.setLevel(logging.DEBUG)
 def InitializingLogging():
 	
 	# Create a log file handler
-	file_handler_log = logging.FileHandler("Logs/basic.log")
+	file_handler_log = logging.FileHandler("Logs/log.log")
 	file_handler_log.setLevel(logging.DEBUG)
 	# file_handler_log.setLevel(logging.INFO)
 
