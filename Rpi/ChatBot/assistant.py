@@ -185,7 +185,8 @@ def Processing(userInput):
 def Output(assistantOutput):
 	global logger
 	global outputMode
-	
+
+	print(f"print assistantOutput: {assistantOutput}")
 	logger.info(f"assistantOutput: {assistantOutput}")	# Text 
 	
 	if(outputMode == "text"):
