@@ -116,23 +116,12 @@ def print_stream(graph, inputs, config):
 	for s in graph.stream(inputs, config, stream_mode="values"):
 		message = s["messages"][-1]
 		if isinstance(message, tuple):
-			# print(message)
-			print("message02:", message)
-			interruptInput = input("interruptInput02: ") 
+			print(message)
 		
 		else:
-			print("[]][][][]")
 			message.pretty_print()
-			print("message:", message)
-			# print("message.content[0]:", message.content[0])
-			print("message.content:", message.content)
 			agentOutput = message.content
-			interruptInput = input("interruptInput: ") 
-		
-			print("{}}{}{}{{}{}")
 			
-
-
 # Main loop to process the graph
 def Main(userInput, threadId):
 	# ~ RefreshGraph()
@@ -150,8 +139,6 @@ def Main(userInput, threadId):
 
 		print("## ## config new:", config)
 
-				
-		
 		if(loopCounter == 0):
 			print_stream(graph, inputs, config)
 		else:
@@ -188,6 +175,6 @@ def Main(userInput, threadId):
 # AgentCall("Give me 1 link of youtube video of linux")
 
 # print("Main return: ", Main("draft a mail about saying hi", 1))
-print("Main return: ", Main("Give me temperature of the cpu of my pc", 1))
+# print("Main return: ", Main("Give me temperature of the cpu of my pc", 1))
 
 
