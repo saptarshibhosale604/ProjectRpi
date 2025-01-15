@@ -174,7 +174,7 @@ def Output(assistantOutput):
 		logger.info(f"llmResponce: {agentResponce}")	# Text 
 	elif(outputMode == "speech"):	
 		TTS.Main(llmResponce) 			# Text to speech
-	else():
+	else:
 		print("Error: Invalid outputMode:", outputMode)
 			
 
