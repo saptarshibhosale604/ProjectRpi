@@ -105,15 +105,6 @@ graph = create_react_agent(
 	checkpointer=MemorySaver()
 ) 
 
-# ~ def RefreshGraph():
-	# ~ graph = create_react_agent(
-		# ~ llm, 
-		# ~ tools, 
-		# ~ interrupt_before=["tools"], 
-		# ~ checkpointer=MemorySaver()
-	# ~ )
-
-
 ## ## SCRIPTS ## ##
 def print_stream(graph, inputs, config):
 	for s in graph.stream(inputs, config, stream_mode="values"):
@@ -132,9 +123,6 @@ def Main(userInput, threadId):
 	
 	while True:
 		global loopCounter
-		
-		# ~ print("## ## config old:", config)
-		
 		
 		# Variable to hold the desired thread ID
 		new_thread_id = "thread-" + str(threadId)
@@ -165,15 +153,15 @@ def Main(userInput, threadId):
 		all_tools = existing_message.tool_calls
 		
 		print("####### Tools to be called ::: ", all_tools)
-		snapshot.next
+		
 		manInTheLoop = input("Do you want to proceed (y/n): ")
 		
 		if manInTheLoop.lower() == "y":
 			print("## Allowed")
+			snapshot.next
 			inputs = None  # Continue with the next step
 		else:
-			print("## Denied")
-			
+			print("## Denied")			
 			break
 
 # AgentCall("Give me 1 link of youtube video of linux")
