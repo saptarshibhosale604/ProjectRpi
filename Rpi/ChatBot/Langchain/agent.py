@@ -1,3 +1,7 @@
+## ## INFO ## ##
+# llm model: chat gpt
+# memory: for each new chat from assistant.py, new memory allocated, no context
+
 ## ## IMPORTING ## ## 
 
 from langchain_openai import ChatOpenAI
@@ -6,6 +10,13 @@ from langgraph.prebuilt import create_react_agent
 from langgraph.checkpoint.memory import MemorySaver
 
 from langchain_community.tools import ShellTool, YouTubeSearchTool
+from langchain_community.tools.tavily_search import TavilySearchResults
+from langchain_google_community import GmailToolkit
+from langchain_google_community.gmail.utils import (
+    build_resource_service,
+    get_gmail_credentials,
+)
+
 
 import os
 
@@ -32,15 +43,39 @@ llm = ChatOpenAI(model="gpt-3.5-turbo", max_tokens=500, temperature=0, max_retri
 toolShell = ShellTool(ask_human_input=False, verbose=True)
 toolShell.description = toolShell.description + f"args {toolShell.args}".replace("{", "{{").replace("}", "}}")
 
-toolYoutube = YouTubeSearchTool()
+credentials = get_gmail_credentials(
+    token_file="/home/rpissb/ProjectRpi/Rpi/ChatBot/Langchain/SecretFiles/token.json",
+    scopes=["https://mail.google.com/"],
+    client_secrets_file="/home/rpissb/ProjectRpi/Rpi/ChatBot/Langchain/SecretFiles/credentials.json",
+)
+api_resource = build_resource_service(credentials=credentials)
+toolkitGmail = GmailToolkit(api_resource=api_resource)
+toolGmail = [tool for tool in toolkitGmail.get_tools() if tool.name  == "create_gmail_draft"]
 
-toolsAdvance =  [toolShell]               	# Need for human in loop
-toolsBasic = [toolYoutube]                  # No need for human in loop
+# getting tool list from toolkit
+# ~ for tool in toolkit.get_tools():
+	# ~ print("tool: ", tool)
+	# ~ print("tool.name: ", tool.name)
+	
+
+# ~ humanBreak = input("humanBreak:")
+
+toolYoutube = YouTubeSearchTool()
+toolWebSearch = TavilySearchResults(max_results=1)
+
+
+toolsAdvance =  [toolShell] + toolGmail               	# Need for human in loop
+toolsBasic = [toolYoutube, toolWebSearch]                  # No need for human in loop
 
 tools = toolsAdvance + toolsBasic
-print("## ## tools:", tools)
+
+
+# ~ tools = toolGmail
+# ~ print("## ## tools:", tools)
+# ~ humanBreak = input("humanBreak:")
 
 ## memory
+# ~ config = {"configurable": {"thread_id": "thread-1"}}
 config = {"configurable": {"thread_id": "thread-1"}}
 
 ## UserInput
@@ -70,13 +105,13 @@ graph = create_react_agent(
 	checkpointer=MemorySaver()
 ) 
 
-def RefreshGraph():
-	graph = create_react_agent(
-		llm, 
-		tools, 
-		interrupt_before=["tools"], 
-		checkpointer=MemorySaver()
-	)
+# ~ def RefreshGraph():
+	# ~ graph = create_react_agent(
+		# ~ llm, 
+		# ~ tools, 
+		# ~ interrupt_before=["tools"], 
+		# ~ checkpointer=MemorySaver()
+	# ~ )
 
 
 ## ## SCRIPTS ## ##
@@ -91,12 +126,24 @@ def print_stream(graph, inputs, config):
 
 
 # Main loop to process the graph
-def Main(userInput):
-	RefreshGraph()
+def Main(userInput, threadId):
+	# ~ RefreshGraph()
 	inputs = {"messages": [("user", userInput)]}  # Replace with actual input
 	
 	while True:
 		global loopCounter
+		
+		# ~ print("## ## config old:", config)
+		
+		
+		# Variable to hold the desired thread ID
+		new_thread_id = "thread-" + str(threadId)
+
+		# Update the thread_id in the config dictionary
+		config["configurable"]["thread_id"] = new_thread_id
+
+		print("## ## config new:", config)
+
 				
 		if(loopCounter == 0):
 			print_stream(graph, inputs, config)
@@ -109,6 +156,8 @@ def Main(userInput):
 		# Check if the graph has ended
 		if not snapshot.next:  # If `snapshot.next` is None or empty, the graph is finished
 			print("### Graph has ended.")
+			# ~ checkpointer = MemorySaver()
+			loopCounter = 0
 			break
 
 		# Get the list of called tools
@@ -128,3 +177,5 @@ def Main(userInput):
 			break
 
 # AgentCall("Give me 1 link of youtube video of linux")
+# ~ Main("draft a mail about saying hi", 1)
+

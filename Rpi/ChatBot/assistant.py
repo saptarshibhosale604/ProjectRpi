@@ -24,6 +24,7 @@ User Input = """
 
 # ~ who is the presedent of india
 
+threadId = 0	# Memory Id for agent graph
 
 import logging
 
@@ -117,7 +118,10 @@ def Main():
 			# Getting responce from LLM model
 			# llmResponce = LLM.Main(userInput)
 			
-			agentResponce = Agent.Main(userInput)
+			global threadId
+			threadId += 1	
+			agentResponce = Agent.Main(userInput, threadId)
+			
 			logger.info(f"llmResponce: {agentResponce}")
 						
 			# ~ # Text to speech
@@ -126,3 +130,8 @@ def Main():
 while(True):
 	Main()
 	
+# ~ userInput = "Give me a youtube video link on valorant"
+# ~ step 1 find youtube video link of valorant, step 2 run firefox cmd with that link
+# ~ Do 1 step at a time. step 1 get 2 youtube video links of valorant game, step 2 draft a mail to my brother ved with these links
+# ~ Do 1 step at a time. step 1 find top 3 music artist, step 2 get 2 youtube video links of each artist from the 3 artist, step 3 draft a mail to my brother ved with these links
+
