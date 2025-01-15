@@ -40,12 +40,13 @@ def InitializingLogging():
 	
 	# Create a file handler
 	file_handler = logging.FileHandler("Logs/basic.log")
-	# file_handler.setLevel(logging.DEBUG)
-	file_handler.setLevel(logging.INFO)
+	file_handler.setLevel(logging.DEBUG)
+	# file_handler.setLevel(logging.INFO)
 
 	# Create a console handler
 	console_handler = logging.StreamHandler()
-	console_handler.setLevel(logging.DEBUG)
+	# console_handler.setLevel(logging.DEBUG)
+	console_handler.setLevel(logging.INFO)
 
 	# Create a formatter and set it for both handlers
 	formatter = logging.Formatter("%(asctime)s %(levelname)s %(message)s", datefmt="%Y-%m-%d %H:%M:%S")
