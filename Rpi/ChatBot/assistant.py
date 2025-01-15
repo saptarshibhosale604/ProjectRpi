@@ -186,7 +186,7 @@ def Output(assistantOutput):
 	global logger
 	global outputMode
 	
-	logger.info(f"agentResponce: {agentResponce}")	# Text 
+	logger.info(f"assistantOutput: {assistantOutput}")	# Text 
 	
 	if(outputMode == "text"):
 		return
