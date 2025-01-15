@@ -28,6 +28,7 @@ User Input = """
 # ~ who is the presedent of india
 
 threadId = 0	# Memory Id for agent graph
+mainLoopCnt = 0 # counting looping of Main()
 
 import logging
 
@@ -141,6 +142,7 @@ def Processing(userInput):
 	global logger
 	global conversationMode
 	
+	
 	if(BasicCmds(userInput)):
 		return
 		
@@ -193,7 +195,7 @@ def Output(assistantOutput):
 	else:
 		print("Error: Invalid outputMode:", outputMode)
 			
-mainLoopCnt = 0
+
 
 def Main():
 	global logger
