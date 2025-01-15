@@ -42,9 +42,10 @@ llm = ChatOpenAI(model="gpt-3.5-turbo", max_tokens=500, temperature=0, max_retri
 
 toolShell = ShellTool(ask_human_input=False, verbose=True)
 toolShell.description = toolShell.description + f"args {toolShell.args}".replace("{", "{{").replace("}", "}}")
+toolShell.description += f" Note: This tool should only be called if the input explicitly includes the phrase 'my pc'"
 
-print("toolShell.description: ", toolShell.description)
-humanBreak = input("humanBreak:")
+# ~ print("toolShell.description: ", toolShell.description)
+# ~ humanBreak = input("humanBreak:")
 
 credentials = get_gmail_credentials(
     token_file="/home/rpissb/ProjectRpi/Rpi/ChatBot/Langchain/SecretFiles/token.json",
