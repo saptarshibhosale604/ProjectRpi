@@ -33,10 +33,11 @@ import logging
 
 # Create a logger
 logger = logging.getLogger()
-logger.setLevel(logging.DEBUG)
+# logger.setLevel(logging.DEBUG)
 
 
 def InitializingLogging():
+	global logger
 	
 	# Create a log file handler
 	file_handler_log = logging.FileHandler("Logs/log.log")
@@ -81,6 +82,7 @@ def InitializingLogging():
 InitializingLogging()
 
 def BasicCmds(userInput):
+	global logger
 	global conversationMode
 	global inputMode
 	global outputMode
@@ -114,10 +116,11 @@ def BasicCmds(userInput):
 		return True
 
 	else:
-		print("## inputMode:", inputMode, ":outputMode:" , outputMode, ":conversationMode:" , conversationMode, "##")
+		logger.debug("## inputMode:", inputMode, ":outputMode:" , outputMode, ":conversationMode:" , conversationMode, "##")
 		return False
 
 def Input():	
+	global logger
 	global inputMode
 		
 	## ## Input ## ##
@@ -135,6 +138,7 @@ def Input():
 	return userInput
 	
 def Processing(userInput):
+	global logger
 	global conversationMode
 	
 	if(BasicCmds(userInput)):
@@ -176,7 +180,8 @@ def Processing(userInput):
 
 		return agentResponce
 
-def Output(assistantOutput):	
+def Output(assistantOutput):
+	global logger
 	global outputMode
 	
 	logger.info(f"agentResponce: {agentResponce}")	# Text 
@@ -188,8 +193,14 @@ def Output(assistantOutput):
 	else:
 		print("Error: Invalid outputMode:", outputMode)
 			
+mainLoopCnt = 0
 
 def Main():
+	global logger
+	global mainLoopCnt
+	
+	mainLoopCnt += 1
+	logger.Info("mainLoopCnt:", mainLoopCnt)
 	
 	userInput = Input()
 	
