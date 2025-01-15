@@ -38,10 +38,15 @@ logger.setLevel(logging.DEBUG)
 
 def InitializingLogging():
 	
-	# Create a file handler
-	file_handler = logging.FileHandler("Logs/basic.log")
-	file_handler.setLevel(logging.DEBUG)
-	# file_handler.setLevel(logging.INFO)
+	# Create a log file handler
+	file_handler_log = logging.FileHandler("Logs/basic.log")
+	file_handler_log.setLevel(logging.DEBUG)
+	# file_handler_log.setLevel(logging.INFO)
+
+	# Create a chat file handler
+	file_handler_chat = logging.FileHandler("Logs/chat.log")
+	file_handler_chat.setLevel(logging.INFO)
+	# file_handler_log.setLevel(logging.INFO)
 
 	# Create a console handler
 	console_handler = logging.StreamHandler()
@@ -50,11 +55,13 @@ def InitializingLogging():
 
 	# Create a formatter and set it for both handlers
 	formatter = logging.Formatter("%(asctime)s %(levelname)s %(message)s", datefmt="%Y-%m-%d %H:%M:%S")
-	file_handler.setFormatter(formatter)
+	file_handler_log.setFormatter(formatter)
+	file_handler_chat.setFormatter(formatter)
 	console_handler.setFormatter(formatter)
 
 	# Add the handlers to the logger
-	logger.addHandler(file_handler)
+	logger.addHandler(file_handler_log)
+	logger.addHandler(file_handler_chat)
 	logger.addHandler(console_handler)
 
 	
@@ -158,7 +165,7 @@ def Processing(userInput):
 		
 		# define role to userInput
 		# userInput = roleDefining + userInput			
-		logger.info(f"userInputWithDefinedRole: {userInput}")
+		logger.debug(f"userInputWithDefinedRole: {userInput}")
 		
 		# Getting responce from LLM model
 		# llmResponce = LLM.Main(userInput)
@@ -172,8 +179,10 @@ def Processing(userInput):
 def Output(assistantOutput):	
 	global outputMode
 	
+	logger.info(f"agentResponce: {agentResponce}")	# Text 
+	
 	if(outputMode == "text"):
-		logger.info(f"llmResponce: {agentResponce}")	# Text 
+		return
 	elif(outputMode == "speech"):	
 		TTS.Main(llmResponce) 			# Text to speech
 	else:
