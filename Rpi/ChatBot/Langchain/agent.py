@@ -188,6 +188,6 @@ def Main(userInput, threadId):
 # AgentCall("Give me 1 link of youtube video of linux")
 
 # print("Main return: ", Main("draft a mail about saying hi", 1))
-print("Main return: ", Main("Hello", 1))
+print("Main return: ", Main("Give me temperature of the cpu of my pc", 1))
 
 
