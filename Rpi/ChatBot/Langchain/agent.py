@@ -154,6 +154,9 @@ def Main(userInput, threadId):
 		# Get the list of called tools
 		existing_message = snapshot.values["messages"][-1]
 		all_tools = existing_message.tool_calls
+
+		print("existing_message:", existing_message)
+		interruptInput = input("interruptInput: ") 
 		
 		print("####### Tools to be called ::: ", all_tools)
 		
@@ -164,9 +167,13 @@ def Main(userInput, threadId):
 			snapshot.next
 			inputs = None  # Continue with the next step
 		else:
-			print("## Denied")			
+			print("## Denied")	
+			
 			break
 
 # AgentCall("Give me 1 link of youtube video of linux")
-# ~ Main("draft a mail about saying hi", 1)
+
+# print("Main return: ", Main("draft a mail about saying hi", 1))
+print("Main return: ", Main("Hello", 1))
+
 
