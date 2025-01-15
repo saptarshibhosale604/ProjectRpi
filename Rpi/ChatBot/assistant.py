@@ -202,7 +202,7 @@ def Main():
 	global mainLoopCnt
 	
 	mainLoopCnt += 1
-	logger.Info("mainLoopCnt:", mainLoopCnt)
+	logger.info("mainLoopCnt:", mainLoopCnt)
 	
 	userInput = Input()
 	
