@@ -112,6 +112,7 @@ graph = create_react_agent(
 
 ## ## SCRIPTS ## ##
 def print_stream(graph, inputs, config):
+	global agentOutput
 	for s in graph.stream(inputs, config, stream_mode="values"):
 		message = s["messages"][-1]
 		if isinstance(message, tuple):
@@ -139,6 +140,7 @@ def Main(userInput, threadId):
 	
 	while True:
 		global loopCounter
+		global agentOutput
 		
 		# Variable to hold the desired thread ID
 		new_thread_id = "thread-" + str(threadId)
