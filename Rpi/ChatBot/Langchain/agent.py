@@ -114,13 +114,16 @@ def print_stream(graph, inputs, config):
 		message = s["messages"][-1]
 		if isinstance(message, tuple):
 			# print(message)
-			print("message:", message)
-			interruptInput = input("interruptInput: ") 
+			print("message02:", message)
+			interruptInput = input("interruptInput02: ") 
 		
 		else:
 			print("[]][][][]")
 			message.pretty_print()
-			print("[]][][][]")
+			print("message:", message)
+			interruptInput = input("interruptInput: ") 
+		
+			print("{}}{}{}{{}{}")
 			
 
 
