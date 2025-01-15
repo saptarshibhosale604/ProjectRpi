@@ -124,7 +124,7 @@ def print_stream(graph, inputs, config):
 			print("[]][][][]")
 			message.pretty_print()
 			print("message:", message)
-			print("message.content[0]:", message.content[0])
+			# print("message.content[0]:", message.content[0])
 			print("message.content:", message.content)
 			agentOutput = message.content
 			interruptInput = input("interruptInput: ") 
