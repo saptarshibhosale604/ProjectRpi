@@ -113,10 +113,15 @@ def print_stream(graph, inputs, config):
 	for s in graph.stream(inputs, config, stream_mode="values"):
 		message = s["messages"][-1]
 		if isinstance(message, tuple):
-			print(message)
+			# print(message)
+			print("message:", message)
+			interruptInput = input("interruptInput: ") 
+		
 		else:
+			print("[]][][][]")
 			message.pretty_print()
-
+			print("[]][][][]")
+			
 
 
 # Main loop to process the graph
@@ -136,6 +141,7 @@ def Main(userInput, threadId):
 		print("## ## config new:", config)
 
 				
+		
 		if(loopCounter == 0):
 			print_stream(graph, inputs, config)
 		else:
@@ -155,9 +161,6 @@ def Main(userInput, threadId):
 		existing_message = snapshot.values["messages"][-1]
 		all_tools = existing_message.tool_calls
 
-		print("existing_message:", existing_message)
-		interruptInput = input("interruptInput: ") 
-		
 		print("####### Tools to be called ::: ", all_tools)
 		
 		manInTheLoop = input("Do you want to proceed (y/n): ")
