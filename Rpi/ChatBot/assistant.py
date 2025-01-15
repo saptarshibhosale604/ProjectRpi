@@ -118,7 +118,7 @@ def Input():
 		userInput = input("userInput: ")	# Text 
 	elif(inputMode == "speech"):
 		userInput = STT.Main()			# Speech To Text
-	else():
+	else:
 		print("Error: Invalid inputMode:", inputMode)
 	
 	# ~ print("userInput:",userInput)	
