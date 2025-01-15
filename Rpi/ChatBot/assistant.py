@@ -77,7 +77,7 @@ def BasicCmds(userInput):
 	global outputMode
 	
 	# Checking for input mode
-	elif (userInput.lower() == "input mode text"):
+	if (userInput.lower() == "input mode text"):
 		inputMode = "text"
 		return True
 	
@@ -95,7 +95,7 @@ def BasicCmds(userInput):
 		return True
 
 	# Checking for wake up call
-	if any(call in userInput.lower() for call in listWakeUpCalls):
+	elif any(call in userInput.lower() for call in listWakeUpCalls):
 		conversationMode = "wakeUp"
 		return True
 	
