@@ -43,6 +43,9 @@ llm = ChatOpenAI(model="gpt-3.5-turbo", max_tokens=500, temperature=0, max_retri
 toolShell = ShellTool(ask_human_input=False, verbose=True)
 toolShell.description = toolShell.description + f"args {toolShell.args}".replace("{", "{{").replace("}", "}}")
 
+print("toolShell.description: ", toolShell.description)
+humanBreak = input("humanBreak:")
+
 credentials = get_gmail_credentials(
     token_file="/home/rpissb/ProjectRpi/Rpi/ChatBot/Langchain/SecretFiles/token.json",
     scopes=["https://mail.google.com/"],
@@ -58,7 +61,6 @@ toolGmail = [tool for tool in toolkitGmail.get_tools() if tool.name  == "create_
 	# ~ print("tool.name: ", tool.name)
 	
 
-# ~ humanBreak = input("humanBreak:")
 
 toolYoutube = YouTubeSearchTool()
 toolWebSearch = TavilySearchResults(max_results=1)
