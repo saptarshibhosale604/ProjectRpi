@@ -99,6 +99,8 @@ config = {"configurable": {"thread_id": "thread-1"}}
 
 ## other
 loopCounter = 0
+agentOutput = ""
+
 
 ## graph and agent
 graph = create_react_agent(
@@ -123,6 +125,7 @@ def print_stream(graph, inputs, config):
 			print("message:", message)
 			print("message.content[0]:", message.content[0])
 			print("message.content:", message.content)
+			agentOutput = message.content
 			interruptInput = input("interruptInput: ") 
 		
 			print("{}}{}{}{{}{}")
@@ -160,7 +163,8 @@ def Main(userInput, threadId):
 			print("### Graph has ended.")
 			# ~ checkpointer = MemorySaver()
 			loopCounter = 0
-			break
+			return agentOutput
+			# break
 
 		# Get the list of called tools
 		existing_message = snapshot.values["messages"][-1]
@@ -176,8 +180,8 @@ def Main(userInput, threadId):
 			inputs = None  # Continue with the next step
 		else:
 			print("## Denied")	
-			
-			break
+			return agentOutput
+			# break
 
 # AgentCall("Give me 1 link of youtube video of linux")
 
