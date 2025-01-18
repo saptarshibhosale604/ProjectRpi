@@ -34,7 +34,8 @@ int cntChargingRestarted = 0;     // Count no of times the charging is restart
 int minPercentage = 0;
 int maxPercentage = 100;
 int minTime = 0;
-int maxTime = 270;                      // 4.5 hr to minutes
+// int maxTime = 270;                      // 4.5 hr to minutes
+int maxTime = 195;                      // 03:15 hh:mm to minutes
 
 unsigned long startTime;
 unsigned long currentTime;
@@ -82,7 +83,8 @@ void loop() {
   EnergyMeterLedChecking();
   ReadBTInput();
   CheckChargingMode();
-  
+  CalculateValues();
+	
   // Checking for 1 min
   if(elapsedTime >= 60000){            
     startTime = millis();
@@ -146,6 +148,15 @@ void RestartCharging(){
   digitalWrite(chargerRelayModule, LOW);   // Start the charging
 }
 
+void CalculateValues(){
+  batteryPercentageCharging = map(chargingTime, minTime, maxTime, minPercentage, maxPercentage);
+  chargedTime = map(batteryPercentageInitial, minPercentage, maxPercentage, minTime, maxTime);
+
+  ETA = maxTime - (chargingTime + chargedTime);
+  batteryPercentageTotal = batteryPercentageInitial + batteryPercentageCharging;
+
+}
+
 void ChargingStatusPerMin(){
   if(debug02) Serial.println("ChargingStatusPerMin()");
 
@@ -158,13 +169,7 @@ void ChargingStatusPerMin(){
   //   chargingStopMinCnt++;
   // }
 
-  batteryPercentageCharging = map(chargingTime, minTime, maxTime, minPercentage, maxPercentage);
-  chargedTime = map(batteryPercentageInitial, minPercentage, maxPercentage, minTime, maxTime);
-
-
-  ETA = maxTime - (chargingTime + chargedTime);
-  batteryPercentageTotal = batteryPercentageInitial + batteryPercentageCharging;
-
+  
   if(batteryPercentageTotal >= 95){
     chargingMode = "Stop";
     PrintValuesSummary();
@@ -262,11 +267,11 @@ void PrintValuesDetail(){
   message += " :chargingMode:";
   message += String(chargingMode);  
   
-  message += " :%25I:"; // %25 => % in url parameter
+  message += " :%I:"; // %25 => % in url parameter
   message += String(batteryPercentageInitial);
-  message += ":%25C:";
+  message += ":%C:";
   message += String(batteryPercentageCharging);
-  message += ":%25T:";
+  message += ":%T:";
   message += String(batteryPercentageTotal);
   message += " :ETA:";
   message += String(ETA);
