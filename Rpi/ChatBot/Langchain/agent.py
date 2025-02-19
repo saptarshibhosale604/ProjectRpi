@@ -1,3 +1,5 @@
+
+
 ## ## INFO ## ##
 # llm model: chat gpt
 # memory: for each new chat from assistant.py, new memory allocated, no context
@@ -47,14 +49,15 @@ toolShell.description += f" Note: This tool should only be called if the input e
 # ~ print("toolShell.description: ", toolShell.description)
 # ~ humanBreak = input("humanBreak:")
 
-credentials = get_gmail_credentials(
-    token_file="/home/rpissb/ProjectRpi/Rpi/ChatBot/Langchain/SecretFiles/token.json",
-    scopes=["https://mail.google.com/"],
-    client_secrets_file="/home/rpissb/ProjectRpi/Rpi/ChatBot/Langchain/SecretFiles/credentials.json",
-)
-api_resource = build_resource_service(credentials=credentials)
-toolkitGmail = GmailToolkit(api_resource=api_resource)
-toolGmail = [tool for tool in toolkitGmail.get_tools() if tool.name  == "create_gmail_draft"]
+# the gmail credentials temperary commented
+#credentials = get_gmail_credentials(
+#    token_file="/home/rpissb/ProjectRpi/Rpi/ChatBot/Langchain/SecretFiles/token.json",
+#    scopes=["https://mail.google.com/"],
+#    client_secrets_file="/home/rpissb/ProjectRpi/Rpi/ChatBot/Langchain/SecretFiles/credentials.json",
+#)
+#api_resource = build_resource_service(credentials=credentials)
+#toolkitGmail = GmailToolkit(api_resource=api_resource)
+#toolGmail = [tool for tool in toolkitGmail.get_tools() if tool.name  == "create_gmail_draft"]
 
 # getting tool list from toolkit
 # ~ for tool in toolkit.get_tools():
@@ -67,7 +70,8 @@ toolYoutube = YouTubeSearchTool()
 toolWebSearch = TavilySearchResults(max_results=1)
 
 
-toolsAdvance =  [toolShell] + toolGmail               	# Need for human in loop
+#toolsAdvance =  [toolShell] + toolGmail               	# Need for human in loop
+toolsAdvance =  [toolShell]                	# Need for human in loop
 toolsBasic = [toolYoutube, toolWebSearch]                  # No need for human in loop
 
 tools = toolsAdvance + toolsBasic

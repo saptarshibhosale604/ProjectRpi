@@ -2,7 +2,7 @@
 #import SpeechToText.speechToTextOnline as STT
 #import LLM.llm as LLM
 import userInputToScriptInvocation as UITSI
-#import Langchain.agent as Agent
+import Langchain.agent as Agent
 
 debug01 = True
 
@@ -207,15 +207,16 @@ def Main():
 	logger.info(f"mainLoopCnt: {mainLoopCnt}")
 	
 	userInput = Input()
-	print("userInput:",userInput)
-	return # temporary
+	#print("app userInput:",userInput)
 
 	if (userInput is not None):
 
 		if(debug01): print("input Not null")
 		assistantOutput = Processing(userInput)
-
+		
 		if (assistantOutput is not None):
+			#print("app assistantOutput:", assistantOutput)
+			return # temporary
 			Output(assistantOutput)
 		
 while(True):
