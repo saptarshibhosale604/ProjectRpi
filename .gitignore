@@ -4,7 +4,6 @@ Logs/*
 
 Arduino/libraries/
 
-Langchain/US_Constitution/
 Langchain/openai_api_key.txt
 
 Langchain/*.json
@@ -12,3 +11,4 @@ Langchain/*pkl
 
 __pycache__
 
+API_KEY*
