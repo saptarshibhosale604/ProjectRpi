@@ -1,19 +1,8 @@
+##Langchain template
+# includes OPEN ai api key, agent, terminal/Shell tool, 
+# UserInput
+
 #### langgraph, man in the loop, Getting end of the graph
-
-
-
-# ~ ## Running basic shell tool
-
-# ~ from langchain_community.tools import ShellTool
-
-# ~ shell_tool = ShellTool()
-
-# ~ result = shell_tool.run({"commands": ["echo 'Hello World!'", "time"]})
-# ~ result = shell_tool.run({"commands": ["bash -c \"echo 'Hello World!'\"", "bash -c time"]})
-# ~ result = shell_tool.run({"commands": ["zsh -c \"echo 'Hello World!'\"", "zsh -c time"]})
-
-# ~ print(result)
-
 ## Shell tool and agent
 
 # ~ from langchain.agents import AgentType, initialize_agent
@@ -41,9 +30,9 @@ tools = [tools]
 # ~ userInput = "Tell me where is 13_agentBasic.py file"
 # ~ userInput = "step 1: Tell me where is 13_agentBasic.py file and step 2: then find other python files from same folder"
 # ~ userInput = "start a timer for 10 sec and after timer over play alarm clock sound to notify"
-userInput = "play a blue eyes youtube video on firefox"
+#userInput = "play a blue eyes youtube video on firefox"
 # ~ userInput = "find the location of lanchain dir and then Give me the list of python files from that langchain directory"
-# ~ userInput = "find the location of 'Lanchain' dir"
+userInput = "find the location of 'README.txt' file"
 
 
 from langgraph.checkpoint.memory import MemorySaver
@@ -85,6 +74,7 @@ def print_stream(graph, inputs, config):
 # Main loop to process the graph
 inputs = {"messages": [("user", userInput)]}  # Replace with actual input
 loopCounter = 0
+
 while True:
     if(loopCounter == 0):
         print_stream(graph, inputs, config)
