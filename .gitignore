@@ -9,6 +9,8 @@ Langchain/openai_api_key.txt
 Langchain/*.json
 Langchain/*pkl
 
+Rpi/PersonalAssistant/
+
 __pycache__
 
 API_KEY*
