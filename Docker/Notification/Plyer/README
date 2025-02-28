@@ -1,0 +1,4 @@
+docker run --rm -e DISPLAY=${DISPLAY} -v /tmp/.X11-unix:/tmp/.X11-unix custom-notify
+docker build -t custom-notify .
+
+WARNING: THE METHOD IS NOT SUITABLE FOR CLI, TERMINAL USE PURPOSE
