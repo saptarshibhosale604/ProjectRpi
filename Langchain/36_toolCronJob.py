@@ -60,7 +60,7 @@ def toolSetRemainder(userInput :str) -> str:
 
 	response = llm.invoke(messages)
 	
-	llmResponce = response.context
+	llmResponce = response.content
 	UpdateFile(llmResponce, "mycron")
 	return {"Cron job": llmResponce}
 
