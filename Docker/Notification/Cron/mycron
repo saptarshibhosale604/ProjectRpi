@@ -1,1 +1,1 @@
-* * * * * /notify.sh >> /var/log/notify.log 2>&1
+* * * * * echo "This is notification 1" >> /var/log/notify.log 2>&1

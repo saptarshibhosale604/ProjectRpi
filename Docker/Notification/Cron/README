@@ -2,12 +2,6 @@ Build the image:
 docker build -t notif-cron .
 Run the container:
 docker run -d --name notifier notif-cron
-
-
-docker exec -it notifier /bin/sh
-crontab -e
-write your cronjob
-
 To view logs:
 docker exec -it notifier tail -f /var/log/notify.log
 
