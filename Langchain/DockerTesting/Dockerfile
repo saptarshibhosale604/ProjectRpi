@@ -15,4 +15,4 @@ RUN pip install -r requirements.txt
 COPY . .
 
 # Command to run your application
-CMD ["python", "35_toolFinanceAssist.py"]
+CMD ["python", "app.py"]

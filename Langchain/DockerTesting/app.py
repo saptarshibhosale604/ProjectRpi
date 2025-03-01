@@ -30,8 +30,44 @@ toolShell.description += f" Note: This tool should only be called if the input e
 
 
 
+# Custome cron job tool
+from langchain_core.tools import tool
+from langchain_core.messages import SystemMessage, HumanMessage
+
+CREATE_CRONJOB_PROMPT = '''From the give user input, Returns only CRON JOB output, Do not include any other text.
+from user input parse the following data:
+minute,
+hour,
+title,
+message.
+Make cron job with following format:
+<minute> <hour> * * * echo "<title> - <message>" >> /var/log/notify.log 2>&1 '''
+
+def UpdateFile(data, filename):
+	with open(filename, 'a') as file:  # Open the file in append mode
+		file.write(str(data) + '\n')  # Write the data followed by a newline
+
+@tool
+def toolSetRemainder(userInput :str) -> str:
+	'''Returns the CRON JOB format for remainder setting.
+	Expects an input with the start 'set remainder'.
+	'''
+	userInput = f"user input = '{userInput}'"
+	messages = [
+		SystemMessage(content=CREATE_CRONJOB_PROMPT),
+		HumanMessage(content=userInput)
+	]
+
+	response = llm.invoke(messages)
+	
+	llmResponce = response.context
+	UpdateFile(llmResponce, "mycron")
+	return {"Cron job": llmResponce}
+
+
+
 #toolsAdvance =  [toolShell  + toolkitSQL_DB] + toolGmail               	# Need for human in loop
-toolsAdvance =  [toolShell]   # Need for human in loop
+toolsAdvance =  [toolShell] + [toolSetRemainder]   # Need for human in loop
 #toolsBasic = [toolYoutube, toolWebSearch]                  # No need for human in loop
 
 tools = toolsAdvance # + toolsBasic
@@ -44,8 +80,8 @@ tools = toolsAdvance # + toolsBasic
 # ~ userInput = "start a timer for 10 sec and after timer over play alarm clock sound to notify"
 #userInput = "play a blue eyes youtube video on firefox"
 # ~ userInput = "find the location of lanchain dir and then Give me the list of python files from that langchain directory"
-userInput = "find the location of 'README.txt' file"
-
+#userInput = "find the location of 'README.txt' file"
+userInput = "set reminder at 14:30 for Meeting with team with message Don't forget to bring the report"
 
 from langgraph.checkpoint.memory import MemorySaver
 agent_executor = create_react_agent(llm, tools, interrupt_before=["tools"])
