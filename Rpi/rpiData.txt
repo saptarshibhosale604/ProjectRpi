@@ -1,4 +1,5 @@
-
+# bash file
+nano ~/.bashrc 
 
 # Custom scripts
 
