@@ -145,5 +145,96 @@
         "genre": "Electronic",
         "singer": "Unknown",
         "filename": "_021_Minimum_Remix.mp3"
+    },
+    {
+        "title": "_022_Aankhon_Mein_Teri",
+        "language": "Hindi",
+        "genre": "Love",
+        "singer": "Unknown",
+        "filename": "_022_Aankhon_Mein_Teri.mp3"
+    },
+    {
+        "title": "_023_Adhi_Adhi_Raat",
+        "language": "Punjabi",
+        "genre": "Love",
+        "singer": "Bilal Saeed",
+        "filename": "_023_Adhi_Adhi_Raat.mp3"
+    },
+    {
+        "title": "_024_Ae_Dil_Hai_Mushkil",
+        "language": "Hindi",
+        "genre": "Love",
+        "singer": "Arijit Singh",
+        "filename": "_024_Ae_Dil_Hai_Mushkil.mp3"
+    },
+    {
+        "title": "_025_Agar_Tum_Saath_Ho",
+        "language": "Hindi",
+        "genre": "Love",
+        "singer": "Unknown",
+        "filename": "_025_Agar_Tum_Saath_Ho.mp3"
+    },
+    {
+        "title": "_026_Dont_Matter",
+        "language": "English",
+        "genre": "Love",
+        "singer": "Akon",
+        "filename": "_026_Dont_Matter.mp3"
+    },
+    {
+        "title": "_027_I_Wanna_Love_You",
+        "language": "English",
+        "genre": "Love",
+        "singer": "Akon ft. Snoop Dogg",
+        "filename": "_027_I_Wanna_Love_You.mp3"
+    },
+    {
+        "title": "_028_Right_Now_Na_Na_Na",
+        "language": "English",
+        "genre": "Love",
+        "singer": "Akon",
+        "filename": "_028_Right_Now_Na_Na_Na.mp3"
+    },
+    {
+        "title": "_029_Smack_That",
+        "language": "English",
+        "genre": "Hip-Hop",
+        "singer": "Akon",
+        "filename": "_029_Smack_That.mp3"
+    },
+    {
+        "title": "_030_On_My_Way",
+        "language": "English",
+        "genre": "Electronic",
+        "singer": "Alan Walker, Sabrina Carpenter, Farruko",
+        "filename": "_030_On_My_Way.mp3"
+    },
+    {
+        "title": "_031_Barbie_Girl",
+        "language": "English",
+        "genre": "Pop",
+        "singer": "Aqua",
+        "filename": "_031_Barbie_Girl.mp3"
+    },
+    {
+        "title": "_032_Im_An_Albatraoz",
+        "language": "English",
+        "genre": "Electronic",
+        "singer": "AronChupa",
+        "filename": "_032_Im_An_Albatraoz.mp3"
+    },
+    {
+        "title": "_033_Be_Intehaan",
+        "language": "Hindi",
+        "genre": "Love",
+        "singer": "Atif Aslam & Sunidhi Chauhan",
+        "filename": "_033_Be_Intehaan.mp3"
+    },
+    {
+        "title": "_034_Khairiyat",
+        "language": "Hindi",
+        "genre": "Love",
+        "singer": "Unknown",
+        "filename": "_034_Khairiyat.mp3"
     }
 ]

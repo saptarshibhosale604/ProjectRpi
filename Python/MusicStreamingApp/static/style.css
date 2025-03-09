@@ -1,0 +1,49 @@
+body {
+    background-color: black;
+    color: white;
+    text-align: center;
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 20px;
+}
+
+h1, h2, p {
+    margin: 10px 0;
+}
+
+#player-container {
+    margin-top: 50px;
+}
+
+audio {
+    width: 80%;
+    margin-top: 10px;
+}
+
+.control-buttons {
+    margin-top: 15px;
+}
+
+button {
+    background-color: #333;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    margin: 5px;
+    font-size: 16px;
+    cursor: pointer;
+    border-radius: 5px;
+}
+
+button:hover {
+    background-color: #555;
+}
+
+.allSongsContainer{
+    display:flex;
+    border:10px solid white;
+}
+
+.allSongsContainer *{
+    flex:1;
+}
