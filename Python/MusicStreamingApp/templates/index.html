@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Music Streaming App</title>
+    <style>
+        body {
+            background-color: black;
+            color: white;
+            text-align: center;
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+        }
+
+        h1, h2, p {
+            margin: 10px 0;
+        }
+
+        #player-container {
+            margin-top: 50px;
+        }
+
+        audio {
+            width: 80%;
+            margin-top: 10px;
+        }
+
+        .control-buttons {
+            margin-top: 15px;
+        }
+
+        button {
+            background-color: #333;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            margin: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+
+        button:hover {
+            background-color: #555;
+        }
+        
+        .allSongsContainer{
+        display:flex;
+        border:10px solid white;
+        }
+        .allSongsContainer *{
+        flex:1;
+        }
+    </style>
+</head>
+<body>
+    <h1>🎵 Music Streaming App2 🎵</h1>
+
+    <div id="player-container">
+    <div class="allSongsContainer">
+     <p id="previous-songs"></p>
+        <h2 id="song-title">Loading...</h2>	
+        <p id="next-songs"></p>
+    </div>
+
+        <p id="song-info"></p>
+      
+        <div class="control-buttons">
+            <button onclick="previousSong()">⏮️ Previous</button>
+            <button onclick="togglePlayPause()">▶️/⏸️ Play/Pause</button>
+            <button onclick="nextSong()">⏭️ Next</button>
+        </div>
+        
+          <audio id="audio-player" controls>
+            <source id="audio-source" src="" type="audio/mpeg">
+            Your browser does not support the audio element.
+        </audio>
+	<div>
+	    
+	    
+	</div>
+    </div>
+
+    <script>
+	    let songQueue = [];
+	    let currentIndex = 0;
+	    let audioPlayer = document.getElementById("audio-player");
+	    let audioSource = document.getElementById("audio-source");
+	    let songTitle = document.getElementById("song-title");
+	    let songInfo = document.getElementById("song-info");
+	    let previousSongsList = document.getElementById("previous-songs");
+	    let nextSongsList = document.getElementById("next-songs");
+
+	    async function loadSongs() {
+		const response = await fetch('/songs');
+		songQueue = await response.json();
+
+		// Sort by language, then genre, then singer, then filename
+		songQueue.sort((a, b) => {
+		    return a.language.localeCompare(b.language) ||
+			   a.genre.localeCompare(b.genre) ||
+			   a.singer.localeCompare(b.singer) ||
+			   a.filename.localeCompare(b.filename);
+		});
+
+		if (songQueue.length > 0) {
+		    loadSong(0);
+		}
+	    }
+
+	    function loadSong(index) {
+		currentIndex = index;
+		let song = songQueue[currentIndex];
+		audioSource.src = "/play/" + song.filename;
+		audioPlayer.load();
+		songTitle.innerText = song.title;
+		songInfo.innerText = `${song.singer} - ${song.genre} - ${song.language}`;
+		audioPlayer.play();
+		updateSongList();
+	    }
+
+	    function updateSongList() {
+		previousSongsList.innerHTML = "";
+		nextSongsList.innerHTML = "";
+
+		for (let i = Math.max(0, currentIndex - 2); i < currentIndex; i++) {
+		    let li = document.createElement("li");
+		    li.innerText = songQueue[i].title;
+		    previousSongsList.appendChild(li);
+		}
+
+		for (let i = currentIndex + 1; i <= Math.min(songQueue.length - 1, currentIndex + 2); i++) {
+		    let li = document.createElement("li");
+		    li.innerText = songQueue[i].title;
+		    nextSongsList.appendChild(li);
+		}
+	    }
+
+	    function togglePlayPause() {
+		if (audioPlayer.paused) {
+		    audioPlayer.play();
+		} else {
+		    audioPlayer.pause();
+		}
+	    }
+
+	    function nextSong() {
+		if (currentIndex < songQueue.length - 1) {
+		    loadSong(currentIndex + 1);
+		}
+	    }
+
+	    function previousSong() {
+		if (currentIndex > 0) {
+		    loadSong(currentIndex - 1);
+		}
+	    }
+
+	    // Auto-play next song when the current song ends
+	    audioPlayer.addEventListener("ended", () => {
+		if (currentIndex < songQueue.length - 1) {
+		    nextSong();
+		}
+	    });
+
+	    window.onload = loadSongs;
+
+    </script>
+</body>
+</html>

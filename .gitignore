@@ -14,3 +14,6 @@ Rpi/PersonalAssistant/
 __pycache__
 
 API_KEY*
+
+
+/Python/MusicStreamingApp/static/music/*
