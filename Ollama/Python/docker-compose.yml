@@ -1,0 +1,25 @@
+# version: '3.8'
+
+services:
+  ollama05:
+    image: ollama/ollama
+    container_name: ollama04
+    volumes:
+      - ollama_data:/root/.ollama  # persists model files
+    ports:
+      - "11434:11434"
+    restart: unless-stopped
+
+  app:
+    build: .
+    container_name: python_app02
+    depends_on:
+      - ollama05
+    environment:
+      - OLLAMA_BASE_URL=http://ollama:11434
+    ports:
+      - "5000:5000"  # adjust based on your app
+
+
+volumes:
+  ollama_data:

@@ -1,0 +1,4 @@
+192.168.189.128
+1CK3c_6A
+sudo nmcli device pihotspot 11111111
+sudo nmcli device wifi hotspot ssid pi-hotspot password 11111111 

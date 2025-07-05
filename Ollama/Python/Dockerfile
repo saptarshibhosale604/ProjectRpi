@@ -1,18 +1,24 @@
 # Use the official Python image from the Docker Hub
 #FROM python:3.9-slim
-FROM python:3.9
+# FROM python:3.9
+# FROM ollama/ollama
+# working fine
+FROM ollama-python38 
 
 # Set the working directory in the container
-WORKDIR /app
+WORKDIR /App
 
 # Copy the requirements file into the container
 COPY requirements.txt .
 
 # Install the dependencies
 RUN pip install -r requirements.txt
-
+# RUN pip install --no-cache-dir -r requirements.txt
+# RUN pip install requests
 # Copy the rest of your application code into the container
-COPY app.py .
+COPY . .
 
 # Command to run your application
-CMD ["python", "app.py"]
+# CMD ["python", "app.py"]
+# CMD ["/bin/sh"]
+CMD ["serve"]

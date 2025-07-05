@@ -1,20 +1,54 @@
 # bash file
 nano ~/.bashrc 
 
-# Custom scripts
+### Custom scripts
 
+## Background scripts 
 # Cooling fan control python script based on cpu temperature
-lxterminal -e "python /home/rpissb/ProjectRpi/Rpi/Background/tempMeasurement.py"
+lxterminal -e "python /home/ssbrpi/Project/Rpi/Background/tempMeasurement.py"
 
+# Copy to clipboard
+alias wl-copy="copy"
+
+# Clear screen
+alias cls="clear"
+
+
+# Start Docker container personal assistant, web app 
+alias dockerPersonalAssistantWebApp='sudo docker rm ollamaLocal -f && \
+sudo docker run -d --rm -v ollama:/root/.ollama -v /home/ssbrpi/Project:/root/Project/ -p 11434:11434 -p 5001:5001 --name ollamaLocal personal_assistant && \
+sudo docker exec -it ollamaLocal python /App/UI/WebApp/app.py'
+
+# Start Docker container personal assistant, cli 
+alias dockerPersonalAssistantCli='sudo docker rm ollamaLocal -f && \
+sudo docker run -d --rm -v ollama:/root/.ollama -v /home/ssbrpi/Project:/root/Project/ -p 11434:11434 --name ollamaLocal personal_assistant && \
+sudo docker exec -it ollamaLocal python /App/UI/cli.py'
+
+
+## File links
 # txt rpiData file
-alias txtRpiData="gedit /home/rpissb/ProjectRpi/Rpi/rpiData.txt &"
+alias txtRpiData="nano /home/ssbrpi/Project/Rpi/rpiData.txt"
 
 # txt config bash file
-alias txtConfigBash="gedit /home/rpissb/.bashrc &"
+alias txtConfigBash="nano /home/ssbrpi/.bashrc"
+
+## Directory links
+alias cdPersonalAssistant="cd /home/ssbrpi/Project/Rpi/PersonalAssistant"
 
 # Restart GUI
 alias restartLightdm="sudo systemctl restart lightdm"
 
+
+##
+#copy recent cmd output to clipboard
+sudo apt install wl-clipboard
+echo hi | wl-copy 
+
+#copy recent cmd to clipboard
+echo !! | wl-copy
+
+
+docker exec -it ollamaLocal /bin/sh
 
 cd ~/ProjectRpi/Rpi/RpiCameraV01
 

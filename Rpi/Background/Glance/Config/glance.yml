@@ -1,0 +1,96 @@
+pages:
+  - name: Home
+    columns:
+      - size: small
+        widgets:
+          - type: calendar
+          - type: server-stats
+            servers:
+              - type: local
+                name: Services
+          - type: rss
+            limit: 10
+            collapse-after: 3
+            cache: 3h
+            feeds:
+              - url: https://ciechanow.ski/atom.xml
+              - url: https://www.joshwcomeau.com/rss.xml
+                title: Josh Comeau
+              - url: https://samwho.dev/rss.xml
+              - url: https://awesomekling.github.io/feed.xml
+              - url: https://ishadeed.com/feed.xml
+                title: Ahmad Shadeed
+
+          - type: twitch-channels
+            channels:
+              - theprimeagen
+              - cohhcarnage
+              - christitustech
+              - blurbs
+              - asmongold
+              - jembawls
+
+      - size: full
+        widgets:
+          - type: monitor
+            cache: 1m
+            title: Services
+            sites:
+              - title: RpiAssistant
+                url: http://192.168.215.108:5001/
+                icon: /assets/qbittorrent-logo.png
+              - title: qbittorrent
+                url: http://192.168.151.1:8080/
+                icon: /assets/qbittorrent-logo.png
+              - title: PiHole
+                url: http://192.168.151.1/admin
+                icon: /assets/music-app-logo.png
+              - title: MusicStreaming
+                url: http://192.168.151.1:5000/
+                icon: /assets/music-app-logo.png
+              - title: Jellyfin
+                url: https://jellyfin.yourdomain.com
+                icon: /assets/jellyfin-logo.png
+              - title: Gitea
+                url: https://gitea.yourdomain.com
+                icon: /assets/gitea-logo.png
+              - title: Immich
+                url: https://immich.yourdomain.com
+                icon: /assets/immich-logo.png
+              - title: AdGuard Home
+                url: https://adguard.yourdomain.com
+                icon: /assets/adguard-logo.png
+              - title: Vaultwarden
+                url: https://vault.yourdomain.com
+                icon: /assets/vaultwarden-logo.png
+
+          - type: hacker-news
+
+          - type: videos
+            channels:
+              - UCXJ4jKAvMMg56WGhqrZHFgw # Techdox
+
+          - type: reddit
+            subreddit: selfhosted
+
+      - size: small
+        widgets:
+          - type: weather
+            location: Christchurch, New Zealand
+
+          - type: markets
+            markets:
+              - symbol: SPY
+                name: S&P 500
+              - symbol: BTC-USD
+                name: Bitcoin
+              - symbol: NVDA
+                name: NVIDIA
+              - symbol: AAPL
+                name: Apple
+              - symbol: MSFT
+                name: Microsoft
+              - symbol: GOOGL
+                name: Google
+              - symbol: AMD
+                name: AMD
