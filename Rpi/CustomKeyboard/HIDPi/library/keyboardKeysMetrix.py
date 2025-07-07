@@ -124,16 +124,16 @@ def Send_key(device_id, keyValue):
     key = keyValue.lower()
     if(key == 'h'):
         Keyboard.send_key(0, KEY_H)
-        # time.sleep(0.5)  # debounce
+        time.sleep(0.5)  # debounce
     elif(key == 'j'):
         Keyboard.send_key(0, KEY_J)
-        # time.sleep(0.5)  # debounce
+        time.sleep(0.5)  # debounce
     elif(key == 'k'):
         Keyboard.send_key(0, KEY_K)
-        # time.sleep(0.5)  # debounce
+        time.sleep(0.5)  # debounce
     elif(key == 'l'):
         Keyboard.send_key(0, KEY_L)
-        # time.sleep(0.5)  # debounce
+        time.sleep(0.5)  # debounce
     else:
         # print(f"Unknown key for pin {pin}: {key}")
         print(f"Unknown key ")
