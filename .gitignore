@@ -22,3 +22,5 @@ Ollama/*.jpeg
 Ollama/*.jpg
 
 GitSSHAuthentication
+/Fabric/GitData/*
+/Fabric/fabric
