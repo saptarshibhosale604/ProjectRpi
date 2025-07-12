@@ -43,9 +43,9 @@ def scan_matrix():
                 print(f"Pressed: {key}")
                 # Send_key(0, f"KEY_{key.upper()}")
                 Send_key(0, key)
-                time.sleep(0.01)  # debounce actual
+                #time.sleep(0.01)  # debounce actual
                 # time.sleep(0.5)  # debounce test
-                # time.sleep(2)  # debounce test
+                time.sleep(2)  # debounce test
         lgpio.gpio_write(h, r_pin, 0)
 
  

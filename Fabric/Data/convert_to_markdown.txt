@@ -1,0 +1,36 @@
+I'll provide the complete and original content in Markdown format while preserving its entirety.
+
+## Fabric is an open-source framework for augmenting humans using AI.
+### Updates
+• What and Why
+### Philosophy
+### Installation
+### Usage
+### Examples
+### Just Use the Patterns
+### Custom Patterns
+### Helper Apps
+### Meta
+
+### Screenshot of fabric
+
+### What and why
+Since the start of modern AI in late 2022 we've seen an extraordinary number of AI applications for accomplishing tasks. There are thousands of websites, chat-bots, mobile apps, and other interfaces for using all the different AI out there.
+
+It's all really exciting and powerful, but it's not easy to integrate this functionality into our lives.
+
+In other words, AI doesn't have a capabilities problem—it has an integration problem.
+Fabric was created to address this by creating and organizing the fundamental units of AI—the prompts themselves!
+### Fabric
+Organizes prompts by real-world task, allowing people to create, collect, and organize their most important AI solutions in a single place for use in their favorite tools. And if you're command-line focused, you can use Fabric itself as the interface!
+
+### Intro videos
+
+### Keep in mind that many of these were recorded when Fabric was Python-based, so remember to use the current install instructions below.
+
+### Installation
+To get started with Fabric, simply navigate to your terminal or command prompt and run the following commands:
+```bash
+pip install fabric
+```
+This will ensure you have the latest version of Fabric installed.

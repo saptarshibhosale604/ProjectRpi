@@ -1,0 +1,3 @@
+*Fabric is an open-source framework for augmenting humans using AI, enabling people to create and organize their most important AI solutions.* 
+*It addresses integration problem with capabilities issue by organizing fundamental units of AI - prompts.* 
+*Created as single place for use in favorite tools, accessible via Fabric interface or Python installation.*

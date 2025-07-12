@@ -1,3 +1,11 @@
+// Need a HOME ROW MOD LOCK which act as Caps lock,
+HOME ROW MOD LOCK (OFF): when pressed the home row will NOT be have home row mod
+HOME ROW MOD LOCK (ON): when pressed the home row will be have home row mod
+
+//  keyboardKeysMetrix5x4HomeModLayer.py, working
+keyboard metrix 5x4
+Home mod layer
+
 // keyboardArrowKeysMetrix5x4.py
 working as expected
 

@@ -10,3 +10,4 @@ fabric -y https://www.youtube.com/watch?v=UbDyjIIGaxQ
 
 cat test02.txt | fabric -sp summarize | fabric -sp write_essay
 
+ cat test01.txt | fabric -sp rate_content | tee rate_content.txt
