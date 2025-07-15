@@ -9,5 +9,9 @@ t_red_team_thinking
 summarize
 ai
 youtube_summary
+extract_wisdom
 
 rate_content
+
+#Get fabric pattern
+/home/ssbrpi/.config/fabric/patterns

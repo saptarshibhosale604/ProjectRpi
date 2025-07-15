@@ -24,3 +24,5 @@ Ollama/*.jpg
 GitSSHAuthentication
 /Fabric/GitData/*
 /Fabric/fabric
+
+Fabric/YoutubeTranscript/yt-dlp
