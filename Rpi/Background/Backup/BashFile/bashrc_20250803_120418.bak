@@ -135,7 +135,7 @@ sudo docker exec -it ollamaLocal python /App/UI/WebApp/app.py'
 # Start Docker container personal assistant, cli 
 alias dockerPersonalAssistantCli='sudo docker rm ollamaLocal -f && \
 sudo docker run -d --rm -v ollama:/root/.ollama -v /home/ssbrpi/Project:/root/Project/ -p 11434:11434 --name ollamaLocal personal_assistant && \
-sudo docker exec -it ollamaLocal python /App/UI/cli.py'
+sudo docker exec -it ollamaLocal /bin/bash '
 
 ## File links
 # txt rpiData file
@@ -153,3 +153,5 @@ alias restartLightdm="sudo systemctl restart lightdm"
 
 alias fabric="/home/ssbrpi/Project/Fabric/fabric"
 alias fabricPattern="/home/ssbrpi/Project/Fabric/fabricPattern.sh"
+
+alias v=nvim
