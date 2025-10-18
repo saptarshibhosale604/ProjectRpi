@@ -1,5 +1,4 @@
-
-// SSH 
+// SSH
 eval "$(ssh-agent -s)"
-ssh-add /home/ssbrpi/Project/GitSSHAuthentication/key09
+ssh-add ~/.ssh/GitAuthentication/ProjectRpi_01/id_rsa
 
