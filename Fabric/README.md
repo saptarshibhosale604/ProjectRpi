@@ -1,3 +1,6 @@
+// fabric git link
+git clone https://github.com/danielmiessler/Fabric --single-branch
+
 // // List of available models in fabric
 // Ollama
 llama3.2:1b
@@ -32,4 +35,5 @@ cat test02.txt | fabric -sp summarize | fabric -sp write_essay
 // fabric patter.sh file, input parameter pattern_name,
 // take input from Data/input.md and output to Data/timestamp_pattern_name.md
 /home/ssbrpi/Project/Fabric/fabricPattern.sh <pattern_name>
+
 

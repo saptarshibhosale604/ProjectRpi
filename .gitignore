@@ -17,6 +17,8 @@ API_KEY*
 
 
 /Python/MusicStreamingApp/static/music/*
+Python/PySpark/Sandbox/DataOutput/*
+Python/PySpark/Sandbox/DataInput/*
 
 Ollama/*.jpeg
 Ollama/*.jpg
@@ -24,6 +26,8 @@ Ollama/*.jpg
 GitSSHAuthentication
 /Fabric/GitData/*
 /Fabric/fabric
+/Fabric/Fabric
+/Fabric/Data/*
 
 Fabric/YoutubeTranscript/yt-dlp
 
