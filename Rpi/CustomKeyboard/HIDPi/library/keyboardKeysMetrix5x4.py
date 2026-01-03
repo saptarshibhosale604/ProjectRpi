@@ -10,11 +10,16 @@ from hidpi.mouse_buttons import *
 keys = [['Q', 'W', 'E', 'R', 'T'],
         ['A', 'S', 'D', 'F', 'G'],
         ['Z', 'X', 'C', 'V', 'B'],        
-        ['Tab', 'L0', 'Shift', 'Del', 'Space']]
+        ['1', '2', '3']]
+        # ['Tab', 'L0', 'Shift', 'Del', 'Space']]
 
 # Define GPIO pins for rows and columns
-COL_PINS = [26, 19, 13, 6, 5]   # Pin no: 37, 35, 33, 31, 29
-ROW_PINS = [21, 20, 16, 12]     # Pin no: 40, 38, 36, 32
+# COL_PINS = [26, 19, 13, 6, 5]   # Pin no: 37, 35, 33, 31, 29
+# ROW_PINS = [21, 20, 16, 12]     # Pin no: 40, 38, 36, 32
+
+ROW_PINS = [26, 19, 13, 6]     # Pin no: 37, 35, 33, 31
+COL_PINS = [21, 20, 16, 12, 1]   # Pin no: 40, 38, 36, 32, 28
+# COL_PINS = [21, 20, 16, 12, 7]   # Pin no: 40, 38, 36, 32, 26 
 
 # Open the default GPIO chip
 h = lgpio.gpiochip_open(0)
@@ -38,14 +43,16 @@ def scan_matrix():
         lgpio.gpio_write(h, r_pin, 1)
         for c_idx, c_pin in enumerate(COL_PINS):
             # print(f":: r_idx: {r_idx}, c_idx: {c_idx}, r_pin: {r_pin}, c_pin: {c_pin}")
+            print(f":: r_idx: {r_idx}, c_idx: {c_idx}, r_pin: {r_pin}, c_pin: {c_pin}, lgpio.gpio_read(h, c_pin): {lgpio.gpio_read(h, c_pin)}")
             if lgpio.gpio_read(h, c_pin):
                 key = keys[r_idx][c_idx]
                 print(f"Pressed: {key}")
                 # Send_key(0, f"KEY_{key.upper()}")
                 Send_key(0, key)
-                #time.sleep(0.01)  # debounce actual
+                # time.sleep(0.01)  # debounce actual
                 # time.sleep(0.5)  # debounce test
-                time.sleep(2)  # debounce test
+                time.sleep(0.05)  # debounce test
+                # time.sleep(2)  # debounce test
         lgpio.gpio_write(h, r_pin, 0)
 
  

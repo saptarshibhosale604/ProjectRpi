@@ -1,0 +1,200 @@
+# Keyboard metrix 5x4, not working
+
+import time
+import math
+import traceback
+import glob
+import os
+
+from hidpi import Keyboard, Mouse
+from hidpi.keyboard_keys import *
+from hidpi.mouse_buttons import *
+
+import RPi.GPIO as GPIO
+
+# Time to wait after a key detection (debounce) in seconds
+timeAfterKeyDetected = 0.01
+
+def TestHid():
+    """Detect an available HID gadget device to use for output."""
+    hid_devices = glob.glob('/dev/hidg*')
+    if hid_devices:
+        print(f"Using HID device: {hid_devices[0]}")
+        return hid_devices[0]
+    else:
+        raise RuntimeError("No HID gadget device found. Ensure USB gadget is configured.")
+
+def TestKeyboard():
+    """Basic keyboard self-test to verify HID reports."""
+    print("Testing keyboard...")
+    time.sleep(1)
+    Keyboard.send_text("Hello AYUSH", delay=0.25)
+    time.sleep(1)
+    Keyboard.send_key(0, KEY_A, hold=1)
+    time.sleep(1)
+    Keyboard.hold_key(0, KEY_B)
+    time.sleep(1)
+    Keyboard.release_keys()
+    time.sleep(1)
+
+def TestMouse():
+    """Basic test of mouse movement around a small circle."""
+    print("Testing mouse...")
+    time.sleep(1)
+    radius = 5
+    for angle in range(0, 360, 1):
+        x = int(radius * math.cos(math.radians(angle)))
+        y = int(radius * math.sin(math.radians(angle)))
+        Mouse.move(x, y)
+        time.sleep(0.01)
+
+# Use BOARD numbering
+GPIO.setmode(GPIO.BOARD)
+
+# 5x4 matrix layout (rows x columns)
+matrixKeys = [
+    ['Q', 'W', 'E', 'R', 'T'],
+    ['A', 'S', 'D', 'F', 'G'],
+    ['Z', 'X', 'C', 'V', 'B'],
+    ['1', '2', '3', '4', '5']
+]
+
+# GPIO pins assigned to rows and columns (BOARD pin numbers)
+ROW_PINS = [37, 35, 33, 31]     # Rows: R0=37(GPIO26), R1=35(GPIO19), R2=33(GPIO13), R3=31(GPIO6)
+COL_PINS = [40, 38, 36, 32, 28] # Columns: C0=40(GPIO21), C1=38(GPIO20), C2=36(GPIO16), C3=32(GPIO12), C4=28(GPIO1)
+
+# Track current state of each matrix position (False = released, True = pressed)
+matrixStates = {}
+
+def BuildKeyMap():
+    """Create mapping from (row, col) to HID keycode."""
+    keyMap = {}
+    for r, row in enumerate(matrixKeys):
+        for c, char in enumerate(row):
+            keycode = Keyboard.char_to_keycode(char)
+            keyMap[(r, c)] = (char, keycode)
+    return keyMap
+
+KEY_MAP = BuildKeyMap()
+
+def SetupMatrixPins():
+    input("SetupMatrixPins")
+    """Configure GPIO pins for matrix scanning."""
+    try:
+        input("SetPins")
+        # Set up row pins as outputs (initially LOW)
+        for pin in ROW_PINS:
+            GPIO.setup(pin, GPIO.OUT)
+            GPIO.output(pin, GPIO.LOW)
+        
+        # input("PullDownRes")
+        # # Set up column pins as inputs with pull-down resistors
+        # for pin in COL_PINS:
+        #     GPIO.setup(pin, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
+        
+        input("InitializeStates")
+        # Initialize states
+        for r in range(len(matrixKeys)):
+            for c in range(len(matrixKeys[0])):
+                matrixStates[(r, c)] = False
+        
+        print("Matrix pins configured successfully.")
+        print("5x4 Matrix Layout:")
+        for row in matrixKeys:
+            print("  ".join(row))
+    except Exception as e:
+        print(f"Error setting up matrix pins: {e}")
+        raise
+
+def ScanMatrix():
+    """
+    Scan the 5x4 matrix and return currently pressed keys.
+    Returns set of (row, col) tuples for pressed keys.
+    """
+    pressedKeys = set()
+    
+    # Scan each row
+    for rIdx, rowPin in enumerate(ROW_PINS):
+        # Activate this row (HIGH)
+        GPIO.output(rowPin, GPIO.HIGH)
+        time.sleep(0.001)  # Stabilize
+        
+        # Read all columns for this row
+        for cIdx, colPin in enumerate(COL_PINS):
+            if GPIO.input(colPin) == GPIO.HIGH:
+                pressedKeys.add((rIdx, cIdx))
+        
+        # Deactivate row (LOW)
+        GPIO.output(rowPin, GPIO.LOW)
+    
+    return pressedKeys
+
+def UpdateHidKeys(pressedKeys):
+    """Send HID report for currently pressed keys."""
+    keycodes = []
+    
+    for coord in pressedKeys:
+        if coord in KEY_MAP:
+            char, keycode = KEY_MAP[coord]
+            if keycode != 0x00:
+                keycodes.append(keycode)
+    
+    # Send hold command for up to 6 keys simultaneously
+    if keycodes:
+        Keyboard.hold_key(0, *keycodes[:6])
+    else:
+        Keyboard.release_keys()
+
+def MapMatrixToKeystrokes():
+    """
+    Main loop: Continuously scan matrix and send HID keystrokes.
+    Supports key holding and multiple simultaneous presses.
+    """
+    try:
+        SetupMatrixPins()
+        print("Monitoring 5x4 matrix. Press Ctrl+C to exit.")
+        print("Current state: Released")
+        
+        while True:
+            # Scan matrix
+            currentPressed = ScanMatrix()
+            
+            # Update HID based on current pressed keys
+            UpdateHidKeys(currentPressed)
+            
+            # Optional: Print state changes (remove in production)
+            if currentPressed:
+                print(f"Pressed: {[(matrixKeys[r][c], (r,c)) for r,c in currentPressed]}")
+            
+            time.sleep(0.02)  # 50Hz polling rate (20ms)
+            
+    except KeyboardInterrupt:
+        print("\nExiting...")
+    except Exception as e:
+        print(f"Error in main loop: {e}")
+        traceback.print_exc()
+    finally:
+        Keyboard.release_keys()
+        GPIO.cleanup()
+        print("GPIO cleaned up.")
+
+if __name__ == "__main__":
+    try:
+        TestHid()
+        # TestKeyboard()  # Uncomment for testing
+        # TestMouse()      # Uncomment for testing
+        
+        MapMatrixToKeystrokes()
+        
+    except KeyboardInterrupt:
+        print("Program interrupted by user.")
+    except Exception as e:
+        print(f"Fatal error: {e}")
+        traceback.print_exc()
+    finally:
+        try:
+            GPIO.cleanup()
+        except:
+            pass
+
+

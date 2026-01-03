@@ -1,0 +1,196 @@
+import time
+import math
+from hidpi import Keyboard, Mouse
+from hidpi.keyboard_keys import *
+from hidpi.mouse_buttons import *
+import glob
+import os
+import RPi.GPIO as GPIO
+
+# Configuration
+timeAfterKeyDetected = 0.01
+
+def TestHid():
+    """Find and validate HID gadget device."""
+    hid_devices = glob.glob('/dev/hidg*')
+    if hid_devices:
+        print(f"Using HID device: {hid_devices[0]}")
+        return hid_devices[0]
+    else:
+        raise RuntimeError("No HID gadget device found. Ensure USB gadget is configured.")
+
+def TestKeyboard():
+    """Test basic keyboard functionality."""
+    print("Testing keyboard...")
+    time.sleep(1)
+    Keyboard.send_text("Hello Matrix Keyboard", delay=0.25)
+    time.sleep(1)
+
+def TestMouse():
+    """Test basic mouse functionality."""
+    print("Testing mouse...")
+    time.sleep(1)
+    radius = 5
+    for angle in range(0, 360, 1):
+        x = int(radius * math.cos(math.radians(angle)))
+        y = int(radius * math.sin(math.radians(angle)))
+        Mouse.move(x, y)
+        time.sleep(0.01)
+
+# 5x4 Matrix Keyboard Configuration
+KEYS_MATRIX = [
+    ['Q', 'W', 'E', 'R', 'T'],
+    ['A', 'S', 'D', 'F', 'G'],
+    ['Z', 'X', 'C', 'V', 'B'],
+    ['1', '2', '3', '4', '5']
+]
+
+ROW_PINS = [37, 35, 33, 31]  # GPIO: 26, 19, 13, 6 (BOARD numbering)
+COL_PINS = [40, 38, 36, 32, 28]  # GPIO: 21, 20, 16, 12, 1 (BOARD numbering)
+
+# Complete keycode mapping for all keys in matrix
+KEY_MAP = {
+    'Q': KEY_Q, 'W': KEY_W, 'E': KEY_E, 'R': KEY_R, 'T': KEY_T,
+    'A': KEY_A, 'S': KEY_S, 'D': KEY_D, 'F': KEY_F, 'G': KEY_G,
+    'Z': KEY_Z, 'X': KEY_X, 'C': KEY_C, 'V': KEY_V, 'B': KEY_B,
+    '1': KEY_1, '2': KEY_2, '3': KEY_3, '4': KEY_4, '5': KEY_5
+}
+
+# Track current state of each matrix position (False = released, True = pressed)
+matrixStates = [[False for _ in range(5)] for _ in range(4)]
+
+def SetupMatrixKeyboard():
+    """Setup GPIO pins for matrix keyboard scanning."""
+    try:
+        GPIO.setmode(GPIO.BOARD)
+        
+        # Setup row pins as OUTPUT (to scan rows)
+        for rowPin in ROW_PINS:
+            GPIO.setup(rowPin, GPIO.OUT)
+            GPIO.output(rowPin, GPIO.LOW)
+        
+        # Setup column pins as INPUT with pull-down
+        for colPin in COL_PINS:
+            GPIO.setup(colPin, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
+        
+        print("Matrix keyboard initialized successfully")
+        print("Rows:", ROW_PINS)
+        print("Columns:", COL_PINS)
+        
+    except Exception as e:
+        print(f"Error setting up matrix keyboard: {e}")
+        raise
+
+def ScanMatrixKeyboard():
+    """Scan the 4x5 matrix and return pressed key positions."""
+    pressedKeys = []
+    
+    try:
+        # Scan each row
+        for row in range(4):
+            # Activate current row (HIGH)
+            GPIO.output(ROW_PINS[row], GPIO.HIGH)
+            time.sleep(0.001)  # Small delay for signal stabilization
+            
+            # Check all columns for this row
+            for col in range(5):
+                if GPIO.input(COL_PINS[col]) == GPIO.HIGH:
+                    pressedKeys.append((row, col))
+            
+            # Deactivate current row (LOW)
+            GPIO.output(ROW_PINS[row], GPIO.LOW)
+    
+    except Exception as e:
+        print(f"Error scanning matrix: {e}")
+    
+    return pressedKeys
+
+def UpdateHidKeysFromMatrix():
+    """Update HID keyboard state based on matrix scan results."""
+    try:
+        pressedKeycodes = []
+        releasedKeycodes = []
+        
+        # Get current pressed positions
+        currentPressed = ScanMatrixKeyboard()
+        
+        # Compare with previous state to detect press/release
+        for row in range(4):
+            for col in range(5):
+                currentState = (row, col) in currentPressed
+                prevState = matrixStates[row][col]
+                
+                keyChar = KEYS_MATRIX[row][col]
+                keycode = KEY_MAP.get(keyChar, 0)
+                
+                if currentState and not prevState:
+                    print(f"{keyChar} pressed")
+                elif not currentState and prevState:
+                    print(f"{keyChar} released")
+                    if keycode:
+                        releasedKeycodes.append(keycode)
+                
+                if currentState and keycode:
+                    pressedKeycodes.append(keycode)
+                
+                # Update state tracking
+                matrixStates[row][col] = currentState
+        
+        # Send HID report for currently pressed keys (hold support)
+        if pressedKeycodes:
+            Keyboard.hold_key(0, *pressedKeycodes[:6])  # Max 6 keys
+        else:
+            Keyboard.release_keys()
+        
+        # Safety release for newly released keys
+        if releasedKeycodes:
+            Keyboard.release_keys()
+            
+    except Exception as e:
+        print(f"Error updating HID keys: {e}")
+        Keyboard.release_keys()  # Safety release on error
+
+def MainMatrixKeyboardLoop():
+    """Main loop for matrix keyboard scanning and HID reporting."""
+    try:
+        print("Starting matrix keyboard monitoring...")
+        print("Press Ctrl+C to exit.")
+        
+        while True:
+            UpdateHidKeysFromMatrix()
+            time.sleep(0.02)  # 50Hz polling rate (20ms)
+            
+    except KeyboardInterrupt:
+        print("\nExiting matrix keyboard...")
+    except Exception as e:
+        print(f"Error in main loop: {e}")
+    finally:
+        try:
+            Keyboard.release_keys()
+            GPIO.cleanup()
+            print("GPIO cleaned up and keys released.")
+        except:
+            pass
+
+if __name__ == "__main__":
+    try:
+        TestHid()
+        SetupMatrixKeyboard()
+        # TestKeyboard()  # Uncomment for testing
+        # TestMouse()     # Uncomment for testing
+        MainMatrixKeyboardLoop()
+        
+    # except KeyboardError as e:
+    #     print(f"HID Error: {e}")
+    except RuntimeError as e:
+        print(f"Runtime Error: {e}")
+    except Exception as e:
+        print(f"Unexpected error: {e}")
+    finally:
+        try:
+            GPIO.cleanup()
+            Keyboard.release_keys()
+        except:
+            pass
+
+

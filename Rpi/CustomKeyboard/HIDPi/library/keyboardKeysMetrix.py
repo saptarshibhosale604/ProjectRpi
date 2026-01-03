@@ -89,11 +89,16 @@ from hidpi.mouse_buttons import *
 import lgpio
 import time
 
-keys = [['h', 'j'],
-        ['k', 'l']]
+keys = [['q', 'w'],
+        ['a', 's']]
+# keys = [['h', 'j'],
+#         ['k', 'l']]
 
-ROW_PINS = [6, 13]
-COL_PINS = [19, 26]
+# COL_PINS = [26, 19]  # row pins as per diagram on paper
+# ROW_PINS = [21, 20]   # col pins as per diagram on paper
+
+COL_PINS = [21, 20]  
+ROW_PINS = [26, 19]   
 
 # Open the default GPIO chip
 h = lgpio.gpiochip_open(0)
@@ -106,10 +111,14 @@ for row in ROW_PINS:
 for col in COL_PINS:
     lgpio.gpio_claim_input(h, col)
 
+print("Initialized")
+
 def scan_matrix():
     for r_idx, r_pin in enumerate(ROW_PINS):
         lgpio.gpio_write(h, r_pin, 1)
         for c_idx, c_pin in enumerate(COL_PINS):
+            # print(f"c_idx: {c_idx}, r_pin: {r_pin}, lgpio.gpio_read(h, c_pin): {lgpio.gpio_read(h, c_pin)}")
+            print(f"r_pin: {r_pin}, c_pin: {c_pin}, lgpio.gpio_read(h, c_pin): {lgpio.gpio_read(h, c_pin)}")
             if lgpio.gpio_read(h, c_pin):
                 key = keys[r_idx][c_idx]
                 print(f"Pressed: {key}")
@@ -122,18 +131,30 @@ def Send_key(device_id, keyValue):
     print(f"Send_key({device_id}, {keyValue})")
     # Keyboard.send_key(0, KEY_H)
     key = keyValue.lower()
-    if(key == 'h'):
-        Keyboard.send_key(0, KEY_H)
-        time.sleep(0.5)  # debounce
-    elif(key == 'j'):
-        Keyboard.send_key(0, KEY_J)
-        time.sleep(0.5)  # debounce
-    elif(key == 'k'):
-        Keyboard.send_key(0, KEY_K)
-        time.sleep(0.5)  # debounce
-    elif(key == 'l'):
-        Keyboard.send_key(0, KEY_L)
-        time.sleep(0.5)  # debounce
+    if(key == 'q'):
+        Keyboard.send_key(0, KEY_Q)
+        time.sleep(2)  # debounce
+    elif(key == 'w'):
+        Keyboard.send_key(0, KEY_W)
+        time.sleep(2)  # debounce
+    elif(key == 'a'):
+        Keyboard.send_key(0, KEY_A)
+        time.sleep(2)  # debounce
+    elif(key == 's'):
+        Keyboard.send_key(0, KEY_S)
+        time.sleep(2)  # debounce
+    # if(key == 'h'):
+    #     Keyboard.send_key(0, KEY_H)
+    #     time.sleep(2)  # debounce
+    # elif(key == 'j'):
+    #     Keyboard.send_key(0, KEY_J)
+    #     time.sleep(2)  # debounce
+    # elif(key == 'k'):
+    #     Keyboard.send_key(0, KEY_K)
+    #     time.sleep(2)  # debounce
+    # elif(key == 'l'):
+    #     Keyboard.send_key(0, KEY_L)
+    #     time.sleep(2)  # debounce
     else:
         # print(f"Unknown key for pin {pin}: {key}")
         print(f"Unknown key ")
