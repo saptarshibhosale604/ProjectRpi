@@ -37,3 +37,6 @@ Session.vim
 Polyglot/*
 
 Rpi/RpiNEspComm/venv/
+
+AsciiArt/wallpaper/*.jpg
+AsciiArt/wallpaper/*.png

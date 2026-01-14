@@ -6,17 +6,13 @@ main.py, working
 - 10x5 keys
 - layer 01 normal layer, short pressed, long pressed.
 - home row mod keys
-    - mod keys hold => Keyboard.hold_key
-    - mod keys release => Keyboard.release
 - funtion keys
 - del key, special caps lock key
 - gaming layer 
 - exit python keyboard script key
 - hold layer up => temp switch to layer 02,
     - releasing layer up => switch layer back to 01
-- hold both layer up 01, layer up 02 => layer switch layer
 - print combos
-- print current layer
 
 TODO
 - B, media keys are not working, layer02
@@ -95,10 +91,9 @@ L2_SHORT = [
 
 # Layer 02, long pressed, Home row mods, one shot modifiers
 L2_LONG = [
-    # ['ONE_SHOT_MODIFIER_LEFT_GUI','ONE_SHOT_MODIFIER_LEFT_ALT','ONE_SHOT_MODIFIER_LEFT_CTRL','ONE_SHOT_MODIFIER_LEFT_SHIFT','TAB','TAB','ONE_SHOT_MODIFIER_RIGHT_SHIFT','ONE_SHOT_MODIFIER_RIGHT_CTRL','ONE_SHOT_MODIFIER_RIGHT_ALT','ONE_SHOT_MODIFIER_RIGHT_GUI'],
-    ['','','','','','','','','',''],
+    ['ONE_SHOT_MODIFIER_LEFT_GUI','ONE_SHOT_MODIFIER_LEFT_ALT','ONE_SHOT_MODIFIER_LEFT_CTRL','ONE_SHOT_MODIFIER_LEFT_SHIFT','TAB','TAB','ONE_SHOT_MODIFIER_RIGHT_SHIFT','ONE_SHOT_MODIFIER_RIGHT_CTRL','ONE_SHOT_MODIFIER_RIGHT_ALT','ONE_SHOT_MODIFIER_RIGHT_GUI'],
     ['LEFT_GUI','LEFT_ALT','LEFT_CTRL','LEFT_SHIFT','TAB','TAB','RIGHT_SHIFT','RIGHT_CTRL','RIGHT_ALT','RIGHT_GUI'],
-    ['','','','','','','GRAVE','PRINT_LEFT_ARROW','PRINT_RIGHT_ARROW','herere'],
+    ['','','','','','','GRAVE','PRINT_LEFT_ARROW','PRINT_RIGHT_ARROW',''],
     # ['ESC','SPACE','LAYER_CHANGE_LAYER','','','LAYER_CHANGE_LAYER','FUNCTION_ENTER','DEL','','']
     ['ESC','SPACE','LAYER_TEMP_LAYER_UP_01','','','LAYER_TEMP_LAYER_UP_02','FUNCTION_ENTER','DEL','','']
 ]
@@ -118,7 +113,7 @@ L3_SHORT = [
 
 # Layer 03, long pressed, Home row mods, one shot modifiers
 L3_LONG = [
-    ['','','','','','','','','',''],
+    ['ONE_SHOT_MODIFIER_LEFT_GUI','ONE_SHOT_MODIFIER_LEFT_ALT','ONE_SHOT_MODIFIER_LEFT_CTRL','ONE_SHOT_MODIFIER_LEFT_SHIFT','TAB','TAB','ONE_SHOT_MODIFIER_RIGHT_SHIFT','ONE_SHOT_MODIFIER_RIGHT_CTRL','ONE_SHOT_MODIFIER_RIGHT_ALT','ONE_SHOT_MODIFIER_RIGHT_GUI'],
     ['LEFT_GUI','LEFT_ALT','LEFT_CTRL','LEFT_SHIFT','TAB','TAB','RIGHT_SHIFT','RIGHT_CTRL','RIGHT_ALT','RIGHT_GUI'],
     ['','','','','','','','','',''],
     ['ESC','SPACE','LAYER_CHANGE_LAYER','','','LAYER_CHANGE_LAYER','FUNCTION_ENTER','DEL','','']
@@ -151,31 +146,6 @@ L5_SHORT = [
     ['ESC', 'SPACE', 'LAYER_UP', '', '', 'LAYER_DOWN', 'ENTER', 'BACKSPACE', '', '']
 ]
 
-# Layer 05
-L5_LONG = [
-    ['','','','','','','','','',''],
-    ['LEFT_GUI','LEFT_ALT','LEFT_CTRL','LEFT_SHIFT','TAB','TAB','RIGHT_SHIFT','RIGHT_CTRL','RIGHT_ALT','RIGHT_GUI'],
-    ['','','','','','','','','',''],
-    ['ESC', 'SPACE', 'LAYER_UP', '', '', 'LAYER_DOWN', 'ENTER', 'BACKSPACE', '', '']
-]
-
-LAYER_SHORT_MAP = {
-    1: L1_SHORT,
-    2: L2_SHORT,
-    3: L3_SHORT,
-    4: KEY_MATRIX_LAYER_09,  # Gaming layer
-    5: L5_SHORT,
-}
-
-LAYER_LONG_MAP = {
-    1: L1_LONG,
-    2: L2_LONG,
-    3: L3_LONG,
-    4: KEY_MATRIX_LAYER_09,  # Gaming layer
-    5: L5_LONG,
-}
-
-
 # --------------------------------------------------
 # Key maps
 # --------------------------------------------------
@@ -204,7 +174,6 @@ longSent = set()
 
 currentLayer = 1
 activeModifiers = 0
-# print("activeModifiers = 0")
 
 # --------------------------------------------------
 
@@ -249,14 +218,12 @@ def HandleLayerXPress(key):
     # print(f"HandleLayerXPress: key: {key}, pressTime[key]: {pressTime[key]}")
     longSent.discard(key)
 
-isModifierHold = False
-
 def HandleLayerXHold(key, LX_LONG):
     global activeModifiers
     global isLayerTempLayerUp01Active
     global isLayerTempLayerUp02Active
     global layerChangeLayerNumber
-    global isModifierHold
+
     # print(f"HandleLayerXHold:")
 
     if key in longSent:
@@ -277,7 +244,6 @@ def HandleLayerXHold(key, LX_LONG):
                 activeModifiers |= mod_val
                 Keyboard.send_key(activeModifiers, keyMap[f"KEY_{main_key}"])
                 activeModifiers = 0
-                # print("activeModifiers = 0")
                 print(f"[SEND] LONG FUNCTIONAL COMBO {keyName}")
                 longSent.add(key)
                 return
@@ -348,7 +314,6 @@ def HandleLayerXHold(key, LX_LONG):
 
             Keyboard.send_key(activeModifiers, keyMap[f"KEY_NONE"])
             activeModifiers = 0
-            # print("activeModifiers = 0")
 
             print(f"[SEND] LONG ONE_SHOT_MODIFIER {get_mod_key}")
             longSent.add(key)
@@ -372,47 +337,29 @@ def HandleLayerXHold(key, LX_LONG):
                     current_modifiers = 0  # Clear after sending
             
             activeModifiers = 0  # Final cleanup
-            # print("activeModifiers = 0")
             longSent.add(key)
             return
 
 
         if keyName in modifierNames:
-            # activeModifiers |= keyMap[f"KEY_{keyName}"]
-            # print(f"[MODIFIER] LONG {keyName}")
-            # Keyboard.send_key(activeModifiers, keyMap[f"KEY_{keyName}"])
-            # Keyboard.hold_key(activeModifiers, keyMap[f"KEY_{keyName}"])
-            mod_val = keyMap[f"KEY_{keyName}"]
-            activeModifiers |= mod_val
-            print(f"[HOLD] MODIFIER {keyName}")
-            Keyboard.hold_key(activeModifiers)  # Hold modifier without releasing
-            isModifierHold = True
-            longSent.add(key)
-            return
-
+            activeModifiers |= keyMap[f"KEY_{keyName}"]
+            print(f"[MODIFIER] LONG {keyName}")
         elif keyName:
             print(f"[SEND] LONG {keyName}")
             Keyboard.send_key(activeModifiers, keyMap[f"KEY_{keyName}"])
-            # activeModifiers = 0
+            activeModifiers = 0
 
         longSent.add(key)
 
-def HandleLayerXRelease(key, LX_SHORT, LX_LONG):
+def HandleLayerXRelease(key, LX_SHORT):
     global activeModifiers
     global keyMap
     global tempLayerUp
     global currentLayer
     global isLayerTempLayerUp01Active
     global isLayerTempLayerUp02Active
-    global isModifierHold
-
-    r, c = key
-    keyName = LX_SHORT[r][c]
 
     if key in longSent:
-        # print("print in release, in longsend")
-        # print(f"isModifierHold: {isModifierHold}")
-
         if tempLayerUp:
             print(f"[RELEASE] LONG LAYER_TEMP_LAYER_UP_xx")
             currentLayer = 1
@@ -420,23 +367,10 @@ def HandleLayerXRelease(key, LX_SHORT, LX_LONG):
             isLayerTempLayerUp01Active = False
             isLayerTempLayerUp02Active = False
 
-        if isModifierHold:
-            isModifierHold = False
-            # print(f"[RELEASE] MODIFIER {keyName}")
-            # Keyboard.release_keys()
-            # activeModifiers = 0
-
-            keyNameLong = LX_LONG[r][c]
-            # print(f"keyName: {keyName}")
-            # print(f"keyNameLong: {keyNameLong}")
-
-            if keyNameLong in modifierNames:
-                print(f"[RELEASE] MODIFIER {keyName}")
-                Keyboard.release_keys()
-                activeModifiers = 0
-                # print("activeModifiers = 0")
-
         return
+
+    r, c = key
+    keyName = LX_SHORT[r][c]
 
     print(f"HandleLayerXRelease keyName: {keyName}")
     if not keyName:
@@ -497,7 +431,6 @@ def HandleLayerXRelease(key, LX_SHORT, LX_LONG):
             activeModifiers |= mod_val
             Keyboard.send_key(activeModifiers, keyMap[f"KEY_{main_key}"])
             activeModifiers = 0
-            # print("activeModifiers = 0")
             print(f"[SEND] SHORT FUNCTIONAL COMBO {keyName}")
             longSent.add(key)
             return
@@ -509,7 +442,6 @@ def HandleLayerXRelease(key, LX_SHORT, LX_LONG):
             special_feature, main_key = special_combo
             Keyboard.send_key(activeModifiers, keyMap[f"KEY_{main_key}"])
             activeModifiers = 0
-            # print("activeModifiers = 0")
 
             if special_feature == 'CHANGE_TO_LAYER_01':
                 SwitchLayer(-1)
@@ -525,51 +457,23 @@ def HandleLayerXRelease(key, LX_SHORT, LX_LONG):
     # print(f"keyMap[KEY_keyName]: {keyMap}")
 
     Keyboard.send_key(activeModifiers, keyMap[f"KEY_{keyName}"])
-    # activeModifiers = 0
+    activeModifiers = 0
 
 maxLayer = 5
-
-
-def PrintLayerShort(layer_num):
-    layerShort = LAYER_SHORT_MAP.get(layer_num)
-
-    if not layerShort:
-        print(f"[LAYER] No SHORT layout for layer {layer_num}")
-        return
-
-    print(f"\n[LAYER {layer_num} SHORT]")
-
-    for row in layerShort:
-        # print(" | ".join(key if key else "----" for key in row))
-        print(" | ".join(key if key else "-" for key in row))
-
-    layerLong = LAYER_LONG_MAP.get(layer_num)
-
-    if not layerLong:
-        print(f"[LAYER] No LONG layout for layer {layer_num}")
-        return
-
-    print(f"\n[LAYER {layer_num} LONG]")
-
-    for row in layerLong:
-        # print(" | ".join(key if key else "----" for key in row))
-        print(" | ".join(key if key else "-" for key in row))
-
-    print("\n")
 
 def SwitchLayer(delta = 0, layerNumber = 0):
     global currentLayer
     # print(f"SwitchLayer Receive delta: {delta}, layerNumber: {layerNumber}")
     if layerNumber != 0:
+        # print("Directly changing layer")
         currentLayer = layerNumber 
-        # print(f"[LAYER] Non-Delta Switched to {currentLayer}")
-        print(f"[LAYER] Direct Switched to layer {currentLayer}")
+        print(f"[LAYER] Non-Delta Switched to {currentLayer}")
+        time.sleep(layerSwitchDelay)
     else:
-        currentLayer = max(1, min(maxLayer, currentLayer + delta)) # print(f"[LAYER] Delta Switched to {currentLayer}")
-        print(f"[LAYER] Delta Switched to layer {currentLayer}")
-
-    PrintLayerShort(currentLayer)
-    time.sleep(layerSwitchDelay)
+        # print("Delta changing layer")
+        currentLayer = max(1, min(maxLayer, currentLayer + delta))
+        print(f"[LAYER] Delta Switched to {currentLayer}")
+        time.sleep(layerSwitchDelay)
 
 def UpdateKeyboardGamingLayer():
     """Update HID state from matrix."""
@@ -641,7 +545,6 @@ def PrintCurrentLayer():
 
 def MainLoop():
     global pressed
-    global activeModifiers
 
     print("[INFO] Keyboard started")
 
@@ -654,16 +557,14 @@ def MainLoop():
         # ---------------- Layer 1 ----------------
         if currentLayer == 1:
             for key in now - pressed:
-                # print(f"[L{currentLayer} PRESS] {key}")
-                print(f"[L{currentLayer} PRESS] key: {key} activeModifiers: {activeModifiers} ")
-                
+                print(f"[L{currentLayer} PRESS] {key}")
                 HandleLayerXPress(key)
 
             for key in now:
                 HandleLayerXHold(key, L1_LONG)
 
             for key in pressed - now:
-                HandleLayerXRelease(key, L1_SHORT, L1_LONG)
+                HandleLayerXRelease(key, L1_SHORT)
 
             pressed = now
             time.sleep(scanDelay)
@@ -671,16 +572,14 @@ def MainLoop():
         # ---------------- Layer 2 ----------------
         elif currentLayer == 2:
             for key in now - pressed:
-                # print(f"[L{currentLayer} PRESS] {key}")
-                print(f"[L{currentLayer} PRESS] key: {key} activeModifiers: {activeModifiers} ")
+                print(f"[L{currentLayer} PRESS] {key}")
                 HandleLayerXPress(key)
 
             for key in now:
                 HandleLayerXHold(key, L2_LONG)
 
             for key in pressed - now:
-                # HandleLayerXRelease(key, L2_SHORT)
-                HandleLayerXRelease(key, L2_SHORT, L2_LONG)
+                HandleLayerXRelease(key, L2_SHORT)
 
             pressed = now
             time.sleep(scanDelay)
@@ -688,16 +587,14 @@ def MainLoop():
         # ---------------- Layer 3 ----------------
         elif currentLayer == 3:
             for key in now - pressed:
-                # print(f"[L{currentLayer} PRESS] {key}")
-                print(f"[L{currentLayer} PRESS] key: {key} activeModifiers: {activeModifiers} ")
+                print(f"[L{currentLayer} PRESS] {key}")
                 HandleLayerXPress(key)
 
             for key in now:
                 HandleLayerXHold(key, L3_LONG)
 
             for key in pressed - now:
-                # HandleLayerXRelease(key, L3_SHORT)
-                HandleLayerXRelease(key, L3_SHORT, L3_LONG)
+                HandleLayerXRelease(key, L3_SHORT)
 
             pressed = now
             time.sleep(scanDelay)
@@ -710,16 +607,14 @@ def MainLoop():
         # ---------------- Layer Change Layer ----------------
         elif currentLayer == layerChangeLayerNumber:
             for key in now - pressed:
-                # print(f"[L{currentLayer} PRESS] {key}")
-                print(f"[L{currentLayer} PRESS] key: {key} activeModifiers: {activeModifiers} ")
+                print(f"[L{currentLayer} PRESS] {key}")
                 HandleLayerXPress(key)
 
             # for key in now:
             #     HandleLayerXHold(key, L5_LONG)
 
             for key in pressed - now:
-                # HandleLayerXRelease(key, L5_SHORT)
-                HandleLayerXRelease(key, L5_SHORT, L5_LONG)
+                HandleLayerXRelease(key, L5_SHORT)
 
             pressed = now
             time.sleep(scanDelay)

@@ -1,0 +1,459 @@
+#!/usr/bin/env python3
+"""
+README.md
+
+main.py, working
+- 10x5 keys
+- layer 01 normal layer, short pressed, long pressed.
+- home row mod keys
+- funtion keys
+- del key, special caps lock key
+- gaming layer 
+- exit python keyboard script key
+
+TODO
+- B, media keys are not working, layer02
+"""
+
+import sys
+import time
+import glob
+from gpiozero import DigitalOutputDevice, Button
+from hidpi import Keyboard
+from hidpi.keyboard_keys import *
+
+# --------------------------------------------------
+# Config
+# --------------------------------------------------
+
+scanDelay = 0.01
+longPressTime = 0.3
+layerSwitchDelay = 0.3
+
+ROW_PINS_BCM = [26, 19, 13, 6]
+COL_PINS_BCM = [21, 20, 16, 12, 1, 7, 8, 25, 24, 23]
+
+matrixStateGamingLayer = [[False] * 10 for _ in range(4)]
+pressTimeGamingLayer = [[0] * 10 for _ in range(4)]
+maxHidKeysGamingLayer = 6
+
+# --------------------------------------------------
+# Layers
+# --------------------------------------------------
+
+# Layer 01, short pressed, Base layer
+L1_SHORT = [
+    ['Q','W','E','R','T','Y','U','I','O','P'],
+    ['A','S','D','F','G','H','J','K','L','SEMICOLON'],
+    ['Z','X','C','V','B','N','M','COMMA','PERIOD','SLASH'],
+    ['ESC','SPACE','LAYER_UP','','','LAYER_DOWN','ENTER','BACKSPACE','','']
+]
+
+# Layer 01, long pressed, Number, Home row mods, Shortcut, Symbol
+L1_LONG = [
+    ['1','2','3','4','5','6','7','8','9','0'],
+    ['LEFT_GUI','LEFT_ALT','LEFT_CTRL','LEFT_SHIFT','TAB','TAB',
+     'RIGHT_SHIFT','RIGHT_CTRL','RIGHT_ALT','RIGHT_GUI'],
+    ['FUNCTION_UNDO','FUNCTION_CUT','FUNCTION_COPY','FUNCTION_PASTE','BACKSLASH','QUOTE','MINUS','EQUAL','LEFT_BRACKET','RIGHT_BRACKET'],
+    ['ESC','SPACE','LAYER_UP','','','LAYER_DOWN','FUNCTION_ENTER','DEL','','']
+]
+
+FUNCTION_COMBOS = {
+    'FUNCTION_UNDO': ('LEFT_CTRL', 'Z'),
+    'FUNCTION_CUT': ('LEFT_CTRL', 'X'),
+    'FUNCTION_COPY': ('LEFT_CTRL', 'C'),
+    'FUNCTION_PASTE': ('LEFT_CTRL', 'V'),
+    'FUNCTION_ENTER': ('LEFT_SHIFT', 'ENTER'),
+    'FUNCTION_ZOOM_OUT': ('LEFT_CTRL', 'MINUS'),
+    'FUNCTION_ZOOM_IN': ('LEFT_CTRL', 'EQUAL'),
+}
+
+SPECIAL_COMBOS = {
+    'SPECIAL_CAPSLOCK': ('CHANGE_TO_LAYER_01', 'CAPSLOCK'),
+}
+
+# Layer 02, short pressed, Navigation, Shortcut, Symbol, Special test
+L2_SHORT = [
+    ['SPECIAL_TEST','','PAGE_UP','','','','','','',''],
+    ['','HOME','PAGE_DOWN','END','','LEFT','DOWN','UP','RIGHT',''],
+    ['','FUNCTION_CLOSE','SPECIAL_CAPSLOCK','','','','FUNCTION_ZOOM_OUT','FUNCTION_ZOOM_IN','',''],
+    ['ESC','SPACE','LAYER_UP','','','LAYER_DOWN','ENTER','BACKSPACE','','']
+]
+
+# Layer 02, long pressed, Home row mods, one shot modifiers
+L2_LONG = [
+    ['ONE_SHOT_MODIFIER_LEFT_GUI','ONE_SHOT_MODIFIER_LEFT_ALT','ONE_SHOT_MODIFIER_LEFT_CTRL','ONE_SHOT_MODIFIER_LEFT_SHIFT','TAB','TAB','ONE_SHOT_MODIFIER_RIGHT_SHIFT','ONE_SHOT_MODIFIER_RIGHT_CTRL','ONE_SHOT_MODIFIER_RIGHT_ALT','ONE_SHOT_MODIFIER_RIGHT_GUI'],
+    ['LEFT_GUI','LEFT_ALT','LEFT_CTRL','LEFT_SHIFT','TAB','TAB','RIGHT_SHIFT','RIGHT_CTRL','RIGHT_ALT','RIGHT_GUI'],
+    ['SPECIAL_QUIT_KEYBOARD','','','','','','','','',''],
+    ['ESC','SPACE','LAYER_UP','','','LAYER_DOWN','FUNCTION_ENTER','DEL','','']
+]
+
+# Layer 03, short pressed, FX / Media layer
+L3_SHORT = [
+    ['F1','F2','F3','F4','F5','F6','F7','F8','F9','F10'],
+    ['F11','F12','','','','MEDIA_PREV','MEDIA_PLAY_PAUSE','MEDIA_MUTE','MEDIA_NEXT',''],
+    ['','','','','','BRIGHTNESS_UP','VOLUME_UP','VOLUME_DOWN','BRIGHTNESS_DOWN',''],
+    ['ESC','SPACE','LAYER_UP','','','LAYER_DOWN','ENTER','BACKSPACE','','']
+]
+
+# Layer 03, long pressed, Home row mods, one shot modifiers
+L3_LONG = [
+    ['ONE_SHOT_MODIFIER_LEFT_GUI','ONE_SHOT_MODIFIER_LEFT_ALT','ONE_SHOT_MODIFIER_LEFT_CTRL','ONE_SHOT_MODIFIER_LEFT_SHIFT','TAB','TAB','ONE_SHOT_MODIFIER_RIGHT_SHIFT','ONE_SHOT_MODIFIER_RIGHT_CTRL','ONE_SHOT_MODIFIER_RIGHT_ALT','ONE_SHOT_MODIFIER_RIGHT_GUI'],
+    ['LEFT_GUI','LEFT_ALT','LEFT_CTRL','LEFT_SHIFT','TAB','TAB','RIGHT_SHIFT','RIGHT_CTRL','RIGHT_ALT','RIGHT_GUI'],
+    ['SPECIAL_QUIT_KEYBOARD','','','','','','','','',''],
+    ['ESC','SPACE','LAYER_UP','','','LAYER_DOWN','FUNCTION_ENTER','DEL','','']
+]
+
+
+# Layer 04, Gaming layer
+gamingLayerNumber = 4
+
+# KEY_MATRIX_LAYER_09 = [
+#     ['Q', 'W', 'E', 'R', 'T', 'Y', 'U', 'I', 'O', 'P'],
+#     ['A', 'S', 'D', 'F', 'G', 'H', 'J', 'K', 'L', 'SEMICOLON'],
+#     ['Z', 'X', 'C', 'V', 'B', 'N', 'M', 'COMMA', 'PERIOD', 'SLASH'],
+#     ['ESC', 'SPACE', 'LAYER_UP', '', '', 'LAYER_DOWN', 'ENTER', 'BACKSPACE', '', '']
+# ]
+KEY_MATRIX_LAYER_09 = [
+    ['Q', 'W', 'E', 'R', 'T', 'Y', 'U', 'I', 'O', 'P'],
+    ['A', 'S', 'D', 'F', 'G', 'H', 'J', 'K', 'L', 'SEMICOLON'],
+    ['Z', 'X', 'C', 'V', 'B', 'N', 'M', 'COMMA', 'PERIOD', 'SLASH'],
+    ['ESC', 'SPACE', 'LAYER_UP', '', '', 'LAYER_DOWN', 'ENTER', 'BACKSPACE', '', '']
+]
+# --------------------------------------------------
+# Key maps
+# --------------------------------------------------
+
+keyMap = {k: v for k, v in globals().items() if k.startswith("KEY_")}
+# print('keyMap start')
+# print(keyMap)
+# print('keyMap end')
+
+modifierNames = {
+    'LEFT_SHIFT','RIGHT_SHIFT','LEFT_CTRL','RIGHT_CTRL',
+    'LEFT_ALT','RIGHT_ALT','LEFT_GUI','RIGHT_GUI'
+}
+
+# --------------------------------------------------
+# State
+# --------------------------------------------------
+
+rowGpios = []
+colGpios = []
+
+pressed = set()
+
+pressTime = {}
+longSent = set()
+
+currentLayer = 1
+activeModifiers = 0
+
+# --------------------------------------------------
+
+def TestHid():
+    if not glob.glob('/dev/hidg*'):
+        raise RuntimeError("No HID device found")
+    print("[INFO] HID ready")
+
+def SetupMatrixKeyboard():
+    for p in ROW_PINS_BCM:
+        rowGpios.append(DigitalOutputDevice(p, initial_value=False))
+    for p in COL_PINS_BCM:
+        colGpios.append(Button(p, pull_up=False))
+    print("[OK] GPIO ready")
+
+def ScanMatrix():
+    keys = set()
+    for r, row in enumerate(rowGpios):
+        row.on()
+        time.sleep(0.0005)
+        for c, col in enumerate(colGpios):
+            if col.is_pressed:
+                keys.add((r, c))
+        row.off()
+    return keys
+
+
+def GetActiveKey(row, col, isLong):
+    """Return key based on layer and press duration."""
+    if currentLayer == 1:
+        return (KEY_MATRIX_LAYER_01_LONG_PRESSED if isLong else
+                KEY_MATRIX_LAYER_01_PRESSED)[row][col]
+    return KEY_MATRIX_LAYER_09[row][col]
+# --------------------------------------------------
+# Core logic
+# --------------------------------------------------
+
+def HandleLayerXPress(key):
+    global activeModifiers
+
+    pressTime[key] = time.time()
+    # print(f"HandleLayerXPress: key: {key}, pressTime[key]: {pressTime[key]}")
+    longSent.discard(key)
+
+def HandleLayerXHold(key, LX_LONG):
+    global activeModifiers
+
+    # print(f"HandleLayerXHold:")
+
+    if key in longSent:
+        return
+
+    if time.time() - pressTime[key] >= longPressTime:
+        r, c = key
+        keyName = LX_LONG[r][c]
+        
+        # print(f"HandleLayerXHold longPressTime: key: {key}, keyName: {keyName}")
+        # print(f"keyName: {keyName}")
+        # print(f"keyName: {keyName}, keyNameFor: {keyNameFor}, keyNameBack: {keyNameBack}, ")
+        if keyName.startswith('FUNCTION_'):
+            # print("inside long FUNCTION_")
+            function_combo = FUNCTION_COMBOS.get(keyName)
+            if function_combo:
+                mod_key, main_key = function_combo
+                mod_val = keyMap[f"KEY_{mod_key}"]
+                activeModifiers |= mod_val
+                Keyboard.send_key(activeModifiers, keyMap[f"KEY_{main_key}"])
+                activeModifiers = 0
+                print(f"[SEND] LONG FUNCTIONAL COMBO {keyName}")
+                longSent.add(key)
+                return
+
+        elif keyName == 'SPECIAL_QUIT_KEYBOARD':
+            print("Quit key pressed. Exiting...")
+            print(f"[SEND] LONG SPECIAL_QUIT_KEYBOARD")
+            sys.exit(0)  # 0 for clean exit; use 1 for error code
+
+        elif keyName.startswith('ONE_SHOT_MODIFIER_'):
+            # print("inside long SPECIAL_") 
+            # special_combo = SPECIAL_COMBOS.get(keyName)
+            prefix = 'ONE_SHOT_MODIFIER_'
+            get_mod_key = keyName[len(prefix):]
+            print(f"get_mod_key: {get_mod_key}")
+            mod_val = keyMap[f"KEY_{get_mod_key}"]
+            activeModifiers |= mod_val
+
+            Keyboard.send_key(activeModifiers, keyMap[f"KEY_NONE"])
+            activeModifiers = 0
+
+            print(f"[SEND] LONG ONE_SHOT_MODIFIER {get_mod_key}")
+            longSent.add(key)
+
+            return
+
+        if keyName in modifierNames:
+            activeModifiers |= keyMap[f"KEY_{keyName}"]
+            print(f"[MODIFIER] LONG {keyName}")
+        elif keyName:
+            print(f"[SEND] LONG {keyName}")
+            Keyboard.send_key(activeModifiers, keyMap[f"KEY_{keyName}"])
+            activeModifiers = 0
+
+        longSent.add(key)
+
+def HandleLayerXRelease(key, LX_SHORT):
+    global activeModifiers
+    global keyMap
+
+    if key in longSent:
+        return
+
+    r, c = key
+    keyName = LX_SHORT[r][c]
+
+    print(f"HandleLayerXRelease keyName: {keyName}")
+    if not keyName:
+        return
+
+    if keyName == 'SPECIAL_TEST':
+        print("SPECIAL_TEST")
+        temp_mod_key = 'LEFT_GUI'
+        mod_val = keyMap[f"KEY_{temp_mod_key}"]
+        activeModifiers |= mod_val
+
+        tempKeyName = 'NONE'
+        Keyboard.send_key(activeModifiers, keyMap[f"KEY_{tempKeyName}"])
+        print("SPECIAL_TEST send")
+        return
+
+    elif keyName == 'LAYER_UP':
+        SwitchLayer(1)
+        return
+    elif keyName == 'LAYER_DOWN':
+        SwitchLayer(-1)
+        return
+
+    elif keyName.startswith('FUNCTION_'):
+        # print("inside long FUNCTION_")
+        function_combo = FUNCTION_COMBOS.get(keyName)
+        if function_combo:
+            mod_key, main_key = function_combo
+            mod_val = keyMap[f"KEY_{mod_key}"]
+            activeModifiers |= mod_val
+            Keyboard.send_key(activeModifiers, keyMap[f"KEY_{main_key}"])
+            activeModifiers = 0
+            print(f"[SEND] SHORT FUNCTIONAL COMBO {keyName}")
+            longSent.add(key)
+            return
+
+    elif keyName.startswith('SPECIAL_'):
+        # print("inside long SPECIAL_") 
+        special_combo = SPECIAL_COMBOS.get(keyName) 
+        if special_combo:
+            special_feature, main_key = special_combo
+            Keyboard.send_key(activeModifiers, keyMap[f"KEY_{main_key}"])
+            activeModifiers = 0
+
+            if special_feature == 'CHANGE_TO_LAYER_01':
+                SwitchLayer(-1)
+
+            print(f"[SEND] SHORT SPECIAL COMBO {keyName}")
+            # longSent.add(key)
+            return
+
+
+    print(f"[SEND] SHORT {keyName}")
+    
+    # keyMap = keyMap[f"KEY_{keyName}"]
+    # print(f"keyMap[KEY_keyName]: {keyMap}")
+
+    Keyboard.send_key(activeModifiers, keyMap[f"KEY_{keyName}"])
+    activeModifiers = 0
+
+def SwitchLayer(delta):
+    global currentLayer
+    currentLayer = max(1, min(4, currentLayer + delta))
+    print(f"[LAYER] Switched to {currentLayer}")
+    time.sleep(layerSwitchDelay)
+
+def UpdateKeyboardGamingLayer():
+    """Update HID state from matrix."""
+    global currentLayer
+
+    pressedKeys = []
+    now = time.time()
+    currentPressed = ScanMatrix()
+
+    for r in range(4):
+        for c in range(10):
+            isPressed = (r, c) in currentPressed
+            wasPressed = matrixStateGamingLayer[r][c]
+
+            if isPressed and not wasPressed:
+                pressTimeGamingLayer[r][c] = now
+
+            if not isPressed and wasPressed:
+                print(f"[RELEASE] Layer {currentLayer} -> ({r},{c})")
+                pressTimeGamingLayer[r][c] = 0
+
+            if isPressed:
+                isLong = (now - pressTimeGamingLayer[r][c]) > longPressTime
+                keyName = GetActiveKey(r, c, isLong)
+
+                if keyName == 'LAYER_UP':
+                    SwitchLayer(1)
+                    return
+                elif keyName == 'LAYER_DOWN':
+                    SwitchLayer(-1)
+                    return
+
+                if not wasPressed:
+                    pressType = "LONG" if isLong else "SHORT"
+                    print(f"[PRESS] Layer {currentLayer} | {pressType} | Key: {keyName}")
+
+                # if keyName == 'LAYER_DOWN':
+                #     currentLayer = max(1, currentLayer - 1)
+                #     print(f"[LAYER] Switched to Layer {currentLayer}")
+                #     continue
+                #
+                # Keyboard.send_key(activeModifiers, keyMap[f"KEY_{main_key}"])
+                # keyCode = keyMap.get(keyName, 0)
+                keyCode = keyMap[f"KEY_{keyName}"]
+                if keyCode:
+                    pressedKeys.append(keyCode)
+
+            matrixStateGamingLayer[r][c] = isPressed
+
+    if pressedKeys:
+        Keyboard.hold_key(0, *pressedKeys[:maxHidKeysGamingLayer])
+    else:
+        Keyboard.release_keys()
+
+
+# --------------------------------------------------
+
+def MainLoop():
+    global pressed
+
+    print("[INFO] Keyboard started")
+
+    while True:
+
+        now = ScanMatrix()
+
+        # print(f"currentLayer: {currentLayer}")
+
+        # ---------------- Layer 1 ----------------
+        if currentLayer == 1:
+            for key in now - pressed:
+                print(f"[L1 PRESS] {key}")
+                HandleLayerXPress(key)
+
+            for key in now:
+                HandleLayerXHold(key, L1_LONG)
+
+            for key in pressed - now:
+                HandleLayerXRelease(key, L1_SHORT)
+
+            pressed = now
+            time.sleep(scanDelay)
+
+        # ---------------- Layer 2 ----------------
+        elif currentLayer == 2:
+            for key in now - pressed:
+                print(f"[L2 PRESS] {key}")
+                HandleLayerXPress(key)
+
+            for key in now:
+                HandleLayerXHold(key, L2_LONG)
+
+            for key in pressed - now:
+                HandleLayerXRelease(key, L2_SHORT)
+
+            pressed = now
+            time.sleep(scanDelay)
+
+        # ---------------- Layer 3 ----------------
+        elif currentLayer == 3:
+            for key in now - pressed:
+                print(f"[L3 PRESS] {key}")
+                HandleLayerXPress(key)
+
+            for key in now:
+                HandleLayerXHold(key, L3_LONG)
+
+            for key in pressed - now:
+                HandleLayerXRelease(key, L3_SHORT)
+
+            pressed = now
+            time.sleep(scanDelay)
+
+
+        # ---------------- Layer 9 ----------------
+        # Gaming layer
+        elif currentLayer == gamingLayerNumber:
+            UpdateKeyboardGamingLayer()
+
+# --------------------------------------------------
+def WelcomeScript():
+    print("WELCOME SSB, To Custom Keyboard.")
+    print("For quiting the keyboard script: Layer 02, hold, Z")
+
+
+if __name__ == "__main__":
+    WelcomeScript()
+    TestHid()
+    SetupMatrixKeyboard()
+    MainLoop()
+

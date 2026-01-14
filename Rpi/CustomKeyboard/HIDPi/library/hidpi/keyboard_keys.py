@@ -1,3 +1,5 @@
+KEY_NONE = 0x00
+
 KEY_A = 0x04
 KEY_B = 0x05
 KEY_C = 0x06
@@ -39,6 +41,8 @@ KEY_0 = 0x27
 KEY_ENTER = 0x28
 KEY_ESC = 0x29
 KEY_BACKSPACE = 0x2A
+KEY_DEL = 0x4C
+KEY_CAPSLOCK = 0x39
 KEY_TAB = 0x2B
 KEY_SPACE = 0x2C
 KEY_MINUS = 0x2D
@@ -98,8 +102,18 @@ KEY_F20 = 0x6F
 # KEY_F23 = 0x72 not working for some reason
 # KEY_F24 = 0x73 not working for some reason
 
-KEY_MEDIA_VOLUME_DOWN = 0x80
-KEY_MEDIA_VOLUME_UP = 0x81
+# KEY_MEDIA_VOLUME_DOWN = 0x80
+# KEY_MEDIA_VOLUME_UP = 0x81
+KEY_MEDIA_PLAY_PAUSE = 0xCD
+KEY_MEDIA_NEXT       = 0xB5
+KEY_MEDIA_PREV       = 0xB6
+
+KEY_VOLUME_UP        = 0xE9
+KEY_VOLUME_DOWN      = 0xEA
+
+KEY_BRIGHTNESS_UP    = 0x6F
+KEY_BRIGHTNESS_DOWN  = 0x70
+
 
 KEY_MAPPINGS = {
     'a': KEY_A, 'b': KEY_B, 'c': KEY_C, 'd': KEY_D, 'e': KEY_E,
@@ -114,3 +128,4 @@ KEY_MAPPINGS = {
     "'": KEY_QUOTE, ',': KEY_COMMA, '.': KEY_PERIOD, '/': KEY_SLASH, 
     '`': KEY_GRAVE, ' ': KEY_SPACE
 }
+

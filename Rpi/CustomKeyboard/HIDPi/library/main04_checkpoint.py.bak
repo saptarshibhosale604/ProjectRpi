@@ -1,0 +1,211 @@
+#!/usr/bin/env python3
+"""
+main.py, working
+10x5 keys
+layer 01 normal layer, short pressed, long pressed.
+home row mod keys
+"""
+
+import time
+import glob
+from gpiozero import DigitalOutputDevice, Button
+from hidpi import Keyboard
+from hidpi.keyboard_keys import *
+
+# --------------------------------------------------
+# Config
+# --------------------------------------------------
+
+scanDelay = 0.01
+longPressTime = 0.6
+layerSwitchDelay = 1.0
+
+ROW_PINS_BCM = [26, 19, 13, 6]
+COL_PINS_BCM = [21, 20, 16, 12, 1, 7, 8, 25, 24, 23]
+
+# --------------------------------------------------
+# Layers
+# --------------------------------------------------
+
+L1_SHORT = [
+    ['Q','W','E','R','T','Y','U','I','O','P'],
+    ['A','S','D','F','G','H','J','K','L','SEMICOLON'],
+    ['Z','X','C','V','B','N','M','COMMA','PERIOD','SLASH'],
+    ['ESC','SPACE','LAYER_UP','','','LAYER_DOWN','ENTER','BACKSPACE','','']
+]
+
+L1_LONG = [
+    ['1','2','3','4','5','6','7','8','9','0'],
+    ['LEFT_GUI','LEFT_ALT','LEFT_CTRL','LEFT_SHIFT','TAB','TAB',
+     'RIGHT_SHIFT','RIGHT_CTRL','RIGHT_ALT','RIGHT_GUI'],
+    # ['LEFT_BRACKET','RIGHT_BRACKET','BACKSLASH','MINUS','EQUAL','','','','',''],
+    ['','','','','BACKSLASH','QUOTE','MINUS','EQUAL','LEFT_BRACKET','RIGHT_BRACKET'],
+    ['ESC','SPACE','LAYER_UP','TEST','','LAYER_DOWN','ENTER','','','']
+]
+
+L2 = L1_SHORT
+
+# --------------------------------------------------
+# Key maps
+# --------------------------------------------------
+
+keyMap = {k: v for k, v in globals().items() if k.startswith("KEY_")}
+modifierNames = {
+    'LEFT_SHIFT','RIGHT_SHIFT','LEFT_CTRL','RIGHT_CTRL',
+    'LEFT_ALT','RIGHT_ALT','LEFT_GUI','RIGHT_GUI'
+}
+
+# --------------------------------------------------
+# State
+# --------------------------------------------------
+
+rowGpios = []
+colGpios = []
+
+pressed = set()
+pressTime = {}
+longSent = set()
+
+currentLayer = 1
+activeModifiers = 0
+
+# --------------------------------------------------
+
+def TestHid():
+    if not glob.glob('/dev/hidg*'):
+        raise RuntimeError("No HID device found")
+    print("[INFO] HID ready")
+
+def SetupMatrixKeyboard():
+    for p in ROW_PINS_BCM:
+        rowGpios.append(DigitalOutputDevice(p, initial_value=False))
+    for p in COL_PINS_BCM:
+        colGpios.append(Button(p, pull_up=False))
+    print("[OK] GPIO ready")
+
+def ScanMatrix():
+    keys = set()
+    for r, row in enumerate(rowGpios):
+        row.on()
+        time.sleep(0.0005)
+        for c, col in enumerate(colGpios):
+            if col.is_pressed:
+                keys.add((r, c))
+        row.off()
+    return keys
+
+# --------------------------------------------------
+# Core logic
+# --------------------------------------------------
+
+def HandleLayer1Press(key):
+    global activeModifiers
+
+    pressTime[key] = time.time()
+    longSent.discard(key)
+
+def HandleLayer1Hold(key):
+    
+    global activeModifiers
+
+    if key in longSent:
+        return
+
+    if time.time() - pressTime[key] >= longPressTime:
+        r, c = key
+        keyName = L1_LONG[r][c]
+        
+        # print(f"keyName: {keyName}")
+        # print(f"keyName: {keyName}, keyNameFor: {keyNameFor}, keyNameBack: {keyNameBack}, ")
+
+        if keyName in modifierNames:
+            activeModifiers |= keyMap[f"KEY_{keyName}"]
+            print(f"[MODIFIER] LONG {keyName}")
+        elif keyName:
+            print(f"[SEND] LONG {keyName}")
+            Keyboard.send_key(activeModifiers, keyMap[f"KEY_{keyName}"])
+            activeModifiers = 0
+
+        longSent.add(key)
+
+def HandleLayer1Release(key):
+    global activeModifiers
+
+    if key in longSent:
+        return
+
+    r, c = key
+    keyName = L1_SHORT[r][c]
+
+    print(f"keyName: {keyName}")
+
+    if not keyName:
+        return
+
+    # if keyName in ('LAYER_UP', 'LAYER_DOWN'):
+    #     return
+
+    elif keyName == 'LAYER_UP':
+        SwitchLayer(1)
+        return
+    elif keyName == 'LAYER_DOWN':
+        SwitchLayer(-1)
+        return
+
+    print(f"[SEND] SHORT {keyName}")
+    Keyboard.send_key(activeModifiers, keyMap[f"KEY_{keyName}"])
+    activeModifiers = 0
+
+def SwitchLayer(delta):
+    global currentLayer
+    currentLayer = max(1, min(2, currentLayer + delta))
+    print(f"[LAYER] Switched to {currentLayer}")
+    time.sleep(layerSwitchDelay)
+
+# --------------------------------------------------
+
+def MainLoop():
+    global pressed
+
+    print("[INFO] Keyboard started")
+
+    while True:
+        now = ScanMatrix()
+
+        # ---------------- Layer 2 ----------------
+        if currentLayer == 2:
+            for key in now - pressed:
+                r, c = key
+                keyName = L2[r][c]
+                if keyName and keyName.startswith('LAYER'):
+                    SwitchLayer(1 if 'UP' in keyName else -1)
+                    continue
+                if keyName:
+                    print(f"[L2 PRESS] {keyName}")
+                    Keyboard.send_key(0, keyMap[f"KEY_{keyName}"])
+            pressed = now
+            time.sleep(scanDelay)
+            continue
+
+        # ---------------- Layer 1 ----------------
+        for key in now - pressed:
+            print(f"[L1 PRESS] {key}")
+            HandleLayer1Press(key)
+
+        for key in now:
+            HandleLayer1Hold(key)
+
+        for key in pressed - now:
+            HandleLayer1Release(key)
+
+        pressed = now
+        time.sleep(scanDelay)
+
+# --------------------------------------------------
+
+if __name__ == "__main__":
+    TestHid()
+    SetupMatrixKeyboard()
+    MainLoop()
+
+

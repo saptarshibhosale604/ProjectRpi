@@ -119,7 +119,7 @@ def MapGPIOToKeyLoop():
 
 if __name__ == "__main__":
     test_hid()
-    # test_keyboard()
-    # test_mouse()
-    MapGPIOToKeyLoop()
+    test_keyboard()
+    test_mouse()
+    # MapGPIOToKeyLoop()
     print("Tested")
