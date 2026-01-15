@@ -24,10 +24,11 @@ Ollama/*.jpeg
 Ollama/*.jpg
 
 GitSSHAuthentication
-/Fabric/GitData/*
-/Fabric/fabric
-/Fabric/Fabric
-/Fabric/Data/*
+
+/FabricData/GitData/*
+/FabricData/fabric
+/FabricData/Fabric
+/FabricData/Data/*
 
 Fabric/YoutubeTranscript/yt-dlp
 
@@ -40,3 +41,7 @@ Rpi/RpiNEspComm/venv/
 
 AsciiArt/wallpaper/*.jpg
 AsciiArt/wallpaper/*.png
+
+CustomKeyboard
+
+*.swp
