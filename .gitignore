@@ -45,3 +45,5 @@ AsciiArt/wallpaper/*.png
 CustomKeyboard
 
 *.swp
+
+Rpi/Pet/event.txt
