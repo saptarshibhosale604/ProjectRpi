@@ -42,7 +42,7 @@ import os
 # Config
 # -----------------------
 eventFile = "event.txt"
-
+delayMainLoop = 5
 
 # -----------------------
 # Emotion Engine
@@ -185,17 +185,17 @@ def Main():
                 HandleEvent(event)
 
             # Optional decay (can enable if needed)
-            # ApplyDecay()
+            ApplyDecay()
 
             behavior, scores = SelectBehavior()
 
             print("\n==============================")
             print("Emotion:", emotion)
-            print("Scores :", scores)
-            print("Action :", behavior)
+            print("Action :", scores)
+            print("Behavior :", behavior)
             print("==============================")
 
-            time.sleep(1)
+            time.sleep(delayMainLoop)
 
     except KeyboardInterrupt:
         print("\n[INFO] Stopped by user.")

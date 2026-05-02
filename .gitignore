@@ -47,3 +47,4 @@ CustomKeyboard
 *.swp
 
 Rpi/Pet/event.txt
+Rpi/Pet/Logs/*

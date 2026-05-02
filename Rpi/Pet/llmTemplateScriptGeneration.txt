@@ -2,25 +2,59 @@
 You are an expert Python developer. Write a complete, production-ready Python script for the following task.
 
 ## Task
-Create a python script which acts like a Terminal User Interface(TUI)
+Create a python script which will
+- check if there is any Logs/vars.json file 
+- if file is not there create one using sampleVarJson variable
+- else if file is there then print in this format:
+------------------------------------
+sensor_inputs		| events
+------------------------------------
+ultrasonic_sensor	| idle
+0					| 0
+current				| current
+
+touch_sensor
+0
+current
+
+mic
+0
+current
+
+battery_voltage_sensor
+0
+current
+
+gyro
+0
+current
+
+camera_module
+0
+current
+- the printing values should be in a tablular format
+
 
 
 ## Detail
 
 
 ## Requirements
-- Name of the script tui.py
+- Name of the script main.py
 - Make the logic and script very simple
 - Handle errors gracefully with try-except blocks
 - Include docstrings and comments
 - Use PascalCase for Functions
 - Use camelCase for Variables
 - Only create 1 file, do not create readme file or any other file
+- Also add a README.md text at the top of the file in multiline commments
 
 ## Examples
 Input: {example_input}
 Expected Output:
-############## V01 ##############
+
+############## V01 ############## ############## V01 ############## ############## V01 ############## ############## V01 ############## ############## V01 ##############
+
 You are an expert Python developer. Write a complete, production-ready Python script for the following task.
 
 ## Task
