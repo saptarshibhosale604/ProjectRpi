@@ -1,0 +1,152 @@
+############## V02 ##############
+You are an expert Python developer. Write a complete, production-ready Python script for the following task.
+
+## Task
+Build an AI-powered terminal emulator on a Raspberry Pi where:
+
+* User types a natural language query
+* A local Ollama LLM processes it
+* The GUI is generated/updated live from the LLM's streamed text output
+* The interface behaves like a terminal but can dynamically create UI components
+* The primary interface of the terminal is a game selector
+* and we could play selected game inside the terminal
+* Just create 2 very simple games to play with a 2 billion parameter model llm
+
+
+
+## Detail
+
+Architecture for the project: 
+
+
+```
++----------------+
+| User Keyboard  |
++-------+--------+
+        |
+        v
++----------------+
+| Input Manager  |
++-------+--------+
+        |
+        v
++----------------+
+| Ollama API     |
+| stream=True    |
++-------+--------+
+        |
+        | tokens
+        v
++----------------+
+| Renderer       |
+| updates GUI    |
++-------+--------+
+        |
+        v
++----------------+
+| Display        |
++----------------+
+```
+
+
+## Requirements
+- Name of the script main.py
+- Make the logic and script very simple
+- Handle errors gracefully with try-except blocks
+- Include docstrings and comments
+- Use PascalCase for Functions
+- Use camelCase for Variables
+- Only create 1 file, do not create readme file or any other file
+- Also add a README.md text at the top of the file in multiline commments
+
+############## V02 ##############
+You are an expert Python developer. Write a complete, production-ready Python script for the following task.
+
+## Task
+Build an AI-powered terminal emulator on a Raspberry Pi where:
+
+* User types a natural language query
+* A local Ollama LLM processes it
+* The GUI is generated/updated live from the LLM's streamed text output
+* The interface behaves like a terminal but can dynamically create UI components
+
+
+
+## Detail
+
+Architecture for the project: 
+
+
+```
++----------------+
+| User Keyboard  |
++-------+--------+
+        |
+        v
++----------------+
+| Input Manager  |
++-------+--------+
+        |
+        v
++----------------+
+| Ollama API     |
+| stream=True    |
++-------+--------+
+        |
+        | tokens
+        v
++----------------+
+| Renderer       |
+| updates GUI    |
++-------+--------+
+        |
+        v
++----------------+
+| Display        |
++----------------+
+```
+
+
+
+## Example:
+
+```
+User:
+
+Show CPU usage
+
+↓
+
+LLM:
+
+Creating dashboard...
+
+[####      ] 40%
+
+↓
+
+Renderer
+
+-------------------------
+ CPU Usage
+
+ ████████ 43%
+
+ RAM
+
+ █████ 25%
+-------------------------
+```
+
+
+## Requirements
+- Name of the script main.py
+- Make the logic and script very simple
+- Handle errors gracefully with try-except blocks
+- Include docstrings and comments
+- Use PascalCase for Functions
+- Use camelCase for Variables
+- Only create 1 file, do not create readme file or any other file
+- Also add a README.md text at the top of the file in multiline commments
+
+

@@ -1,0 +1,18 @@
+Retrieving stock data...
+
+```
+    Apple        155.12   -2.56%
+    [BAR Stock1 85%] 
+ Google         2574.63  0.18%
+    [BAR Stock2 92%]
+ Amazon          1945.67  1.31%
+    [BAR Stock3 88] 
+ Microsoft      283.44 -0.45%
+    [BAR Stock4 76%] 
+ Tesla           731.15 -3.21%
+    [BAR Stock5 72%] 
+  [BAR CPU 25] We're running at 25% capacity.
+```
+Please note that graphs are not directly supported by this terminal renderer, but I've tried to simulate the data in a simple text format.
+
+To view actual stock price charts, consider using online platforms like Yahoo Finance or Google Finance.

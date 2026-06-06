@@ -42,6 +42,9 @@ visualizer-style table every loop cycle.
 ## Notes
 - Sensor values are simulated; swap ReadSensorInputs() for real hardware reads.
 - Loop delay is configurable via delayMainLoop (seconds).
+
+## TODO
+- all actions are not visible in print fucntion
 """
 
 import os
@@ -54,6 +57,7 @@ import random
 # -----------------------
 delayMainLoop = 1          # seconds between each brain cycle
 logFilePath   = os.path.join("Logs", "state.json")
+isTimeDecayEnable = False
 
 # -----------------------
 # Initial State
@@ -67,6 +71,8 @@ def CreateInitialState():
             "mic":                      "-",
             "battery_voltage_sensor":   "-",
             "gyro":                     "-",
+            "time_passed":              "-",
+            "rtc":                      "-",
             "camera_module":            "-"
         },
         "events": {
@@ -76,15 +82,21 @@ def CreateInitialState():
             "obstacle_near":False,
             "low_battery":  False,
             "fall":         False,
+            "time_of_day":  False,
+            "charging":     False,
             "new_object":   False,
             "known_object": False,
             "human_seen":   False
         },
         "emotions": {
-            "attachment": 0.0,
-            "energy":     1.0,
-            "fear":       0.0,
-            "curiosity":  0.5
+            "attachment":   0.0,
+            "energy":       1.0,
+            "fear":         0.0,
+            "curiosity":    0.5,
+            "boredom":      0.0,
+            "happiness":    1.0,
+            "loneliness":   0.0,
+            "exitement":    0.0
         },
         "actions": {
             "idle":          0.0,
@@ -92,6 +104,8 @@ def CreateInitialState():
             "cry":           0.0,
             "dance":         0.0,
             "sleep":         0.0,
+            "action_randomizer":  0.0,
+            "call_human":    0.0,
             "hide":          0.0,
             "charge":        0.0,
             "explore":       0.0,
@@ -101,7 +115,8 @@ def CreateInitialState():
         "mechanical_output": {
             "speaker":                  "-",
             "display_eyes_expressions": "-",
-            "leg_wheels_motors":        "-"
+            "leg_wheels_motors":        "-",
+            "speed_incrementer":        "-"
         }
     }
 
@@ -121,36 +136,99 @@ def Clamp(value, lo=0.0, hi=1.0):
 # -----------------------
 # Step 1 – Read Sensor Inputs
 # -----------------------
+
+SENSOR_PROMPTS = {
+    "ultrasonic_sensor":      "Ultrasonic distance (5.0–200.0 cm, e.g. 42.5): ",
+    "touch_sensor":           "Touch sensor (True/False): ",
+    "mic":                    "Mic triggered (True/False): ",
+    "battery_voltage_sensor": "Battery voltage (3.2–4.2 V, e.g. 3.85): ",
+    "gyro":                   "Gyro tilt detected (True/False): ",
+    "camera_module":          "Camera result (none/human/known_object/new_object): ",
+}
+
+SENSOR_PARSERS = {
+    "ultrasonic_sensor":      lambda v: round(float(v), 1),
+    "touch_sensor":           lambda v: v.strip().lower() == "true",
+    "mic":                    lambda v: v.strip().lower() == "true",
+    "battery_voltage_sensor": lambda v: round(float(v), 2),
+    "gyro":                   lambda v: v.strip().lower() == "true",
+    "camera_module":          lambda v: v.strip().lower()
+                                        if v.strip().lower() in {"none", "human", "known_object", "new_object"}
+                                        else (_ for _ in ()).throw(ValueError(f"Invalid camera value: '{v}'")),
+}
+
+SENSOR_GENERATORS = {
+    "ultrasonic_sensor":      lambda: round(random.uniform(5.0, 200.0), 1),
+    "touch_sensor":           lambda: random.choice([True, False]),
+    "mic":                    lambda: random.choice([True, False, False]),
+    "battery_voltage_sensor": lambda: round(random.uniform(3.2, 4.2), 2),
+    "gyro":                   lambda: random.choice([False, False, False, True]),
+    "camera_module":          lambda: random.choice(["none", "none", "human",
+                                                     "known_object", "new_object"]),
+}
 def ReadSensorInputs():
     """
-    Simulate reading from hardware sensors.
-    Each call changes exactly one randomly chosen sensor value.
-    Replace this function body with real hardware calls as needed.
-    Returns a dict of raw sensor values.
+    Asks the user to pick a sensor, then pick a value for it.
+    If the user skips either prompt (Enter / 0), falls back to random.
     """
     try:
-        sensor_generators = {
-            "ultrasonic_sensor":      lambda: round(random.uniform(5.0, 200.0), 1),
-            "touch_sensor":           lambda: random.choice([True, False]),
-            "mic":                    lambda: random.choice([True, False, False]),
-            "battery_voltage_sensor": lambda: round(random.uniform(3.2, 4.2), 2),
-            "gyro":                   lambda: random.choice([False, False, False, True]),
-            "camera_module":          lambda: random.choice(["none", "none", "human",
-                                                             "known_object", "new_object"])
-        }
-
-        # Start from last known values
         sensorData = dict(state["sensor_inputs"])
 
-        # Pick exactly one sensor to update this tick
-        key_to_update = random.choice(list(sensor_generators.keys()))
-        sensorData[key_to_update] = sensor_generators[key_to_update]()
+        SENSOR_OPTIONS = {
+            "ultrasonic_sensor":      [10.0, 25.0, 50.0, 100.0, 150.0, 200.0],
+            "touch_sensor":           [True, False],
+            "mic":                    [True, False],
+            "battery_voltage_sensor": [3.2, 3.5, 3.7, 3.9, 4.0, 4.2],
+            "gyro":                   [True, False],
+            "camera_module":          ["none", "human", "known_object", "new_object"],
+        }
+
+        sensor_keys = list(SENSOR_OPTIONS.keys())
+
+        # ── Step 1: Pick a sensor ─────────────────────────────────────────────
+        input("\n[Sensor Override] Choose a sensor to set:")
+        print(f"  0. random")
+        print(f"  9. not any update at all")
+        for i, key in enumerate(sensor_keys, start=1):
+            print(f"  {i}. {key}")
+
+
+        raw_sensor = input("Your choice: ").strip()
+        sensor_choice = int(raw_sensor) if raw_sensor.isdigit() else 0
+
+        if sensor_choice == 9:
+            return sensorData
+
+        if sensor_choice == 0 or sensor_choice > len(sensor_keys):
+            # Random mode — update one random sensor
+            key_to_update = random.choice(sensor_keys)
+            sensorData[key_to_update] = SENSOR_GENERATORS[key_to_update]()
+            print(f"  → (random) {key_to_update} = {sensorData[key_to_update]}")
+            return sensorData
+
+        chosen_sensor = sensor_keys[sensor_choice - 1]
+
+        # ── Step 2: Pick a value for the chosen sensor ────────────────────────
+        options = SENSOR_OPTIONS[chosen_sensor]
+        print(f"\n[Value Override] Choose a value for '{chosen_sensor}' (0 = random):")
+        for i, val in enumerate(options, start=1):
+            print(f"  {i}. {val}")
+
+        raw_value = input("Your choice: ").strip()
+        value_choice = int(raw_value) if raw_value.isdigit() else 0
+
+        if value_choice == 0 or value_choice > len(options):
+            sensorData[chosen_sensor] = SENSOR_GENERATORS[chosen_sensor]()
+            print(f"  → (random) {chosen_sensor} = {sensorData[chosen_sensor]}")
+        else:
+            sensorData[chosen_sensor] = options[value_choice - 1]
+            print(f"  → {chosen_sensor} = {sensorData[chosen_sensor]}")
 
         return sensorData
 
     except Exception as error:
         print(f"[ERROR] ReadSensorInputs: {error}")
-        return state["sensor_inputs"]   # return last known values on failure
+        return state["sensor_inputs"]
 
 # -----------------------
 # Step 2 – Update Events
@@ -253,10 +331,11 @@ def UpdateEmotions(events, emotions):
             e["curiosity"]  += 0.02
 
         # Time decay
-        e["fear"]       = e["fear"]       * 0.95
-        e["attachment"] = e["attachment"] * 0.99
-        e["curiosity"]  = e["curiosity"]  + 0.01
-        e["energy"]     = e["energy"]     - 0.002
+        if isTimeDecayEnable:
+            e["fear"]       = e["fear"]       * 0.95
+            e["attachment"] = e["attachment"] * 0.99
+            e["curiosity"]  = e["curiosity"]  + 0.01
+            e["energy"]     = e["energy"]     - 0.002
 
         # Clamp all
         for key in e:
@@ -491,9 +570,9 @@ def Main():
             }
 
             print(f"  ✅  Best Action → {bestAction}")
-            print(f"  💾  State saved to {logFilePath}")
+            # print(f"  💾  State saved to {logFilePath}")
 
-            input("Should I proceed: ")
+            # input("Should I proceed: ")
 
             time.sleep(delayMainLoop)
 

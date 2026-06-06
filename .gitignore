@@ -48,3 +48,5 @@ CustomKeyboard
 
 Rpi/Pet/event.txt
 Rpi/Pet/Logs/*
+
+Rpi/VibeTerminal/Logs/*
