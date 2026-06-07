@@ -462,6 +462,7 @@ def StreamOllama(userQuery: str) -> None:
         userQuery: The natural language query from the user.
     """
     url     = f"{OLLAMA_URL}/api/chat"
+    # url     = f"{OLLAMA_URL}/api/generate"
 
     if USE_CONVERSATION_HISTORY:
         # Copy existing history and append current user message

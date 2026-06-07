@@ -1,0 +1,339 @@
+############## V02 ##############
+You are an expert Python developer. Write a complete, production-ready Python script for the following task.
+
+## Task
+Build an AI-powered Web app emulator on a Raspberry Pi where:
+
+* User types a natural language query
+* A local Ollama LLM processes it
+* The GUI is generated/updated live from the LLM's streamed text output
+* The interface behaves like normal HTML web app but can dynamically create UI components
+
+
+
+## Detail
+
+Architecture for the project: 
+## JSON UI → HTML Rendering
+
+The idea is that **the LLM does not generate HTML directly**. Instead, it generates a **structured description of the interface (JSON)**. Your **Renderer** then converts that JSON into HTML (or SVG, terminal UI, Qt, etc.).
+
+### Architecture
+
+```text
+User
+   │
+   ▼
+Ollama (4B LLM)
+   │
+   ▼
+JSON UI
+   │
+   ▼
+Renderer
+   │
+   ▼
+HTML
+   │
+   ▼
+Browser/WebView
+```
+
+---
+
+## Example 1: Simple Card
+
+### LLM outputs JSON
+
+```json
+{
+  "type": "card",
+  "title": "CPU Usage",
+  "value": "78%"
+}
+```
+
+---
+
+### Renderer converts it to HTML
+
+```html
+<div class="card">
+    <h2>CPU Usage</h2>
+    <h1>78%</h1>
+</div>
+```
+
+---
+
+### Browser displays
+
+```
++-------------------+
+| CPU Usage         |
+|                   |
+|      78%          |
++-------------------+
+```
+
+---
+
+# Example 2: Progress Bar
+
+## LLM outputs
+
+```json
+{
+  "type": "progress",
+  "label": "Memory",
+  "value": 65
+}
+```
+
+---
+
+## Renderer
+
+```python
+def render_progress(obj):
+    return f"""
+    <div>
+        <p>{obj['label']}</p>
+        <progress value="{obj['value']}" max="100"></progress>
+    </div>
+    """
+```
+
+---
+
+## HTML produced
+
+```html
+<div>
+    <p>Memory</p>
+    <progress value="65" max="100"></progress>
+</div>
+```
+
+Browser:
+
+```
+Memory
+
+███████████░░░░ 65%
+```
+
+---
+
+# Example 3: Dashboard
+
+## LLM outputs
+
+```json
+{
+  "type": "dashboard",
+  "children": [
+    {
+      "type": "card",
+      "title": "CPU",
+      "value": "78%"
+    },
+    {
+      "type": "card",
+      "title": "RAM",
+      "value": "52%"
+    }
+  ]
+}
+```
+
+---
+
+## Renderer
+
+```python
+html = ""
+
+for child in dashboard["children"]:
+    html += render(child)
+```
+
+---
+
+## HTML
+
+```html
+<div class="dashboard">
+
+<div class="card">
+<h2>CPU</h2>
+<h1>78%</h1>
+</div>
+
+<div class="card">
+<h2>RAM</h2>
+<h1>52%</h1>
+</div>
+
+</div>
+```
+
+Browser:
+
+```
++-----------+  +-----------+
+
+CPU             RAM
+
+78%             52%
+
++-----------+  +-----------+
+```
+
+---
+
+# Example 4: Table
+
+## LLM outputs
+
+```json
+{
+  "type": "table",
+  "headers": ["Task", "Status"],
+  "rows": [
+    ["Compile", "Done"],
+    ["Test", "Running"]
+  ]
+}
+```
+
+---
+
+## Renderer generates
+
+```html
+<table>
+<tr>
+<th>Task</th>
+<th>Status</th>
+</tr>
+
+<tr>
+<td>Compile</td>
+<td>Done</td>
+</tr>
+
+<tr>
+<td>Test</td>
+<td>Running</td>
+</tr>
+
+</table>
+```
+
+Result:
+
+| Task    | Status  |
+| ------- | ------- |
+| Compile | Done    |
+| Test    | Running |
+
+---
+
+# Why use JSON instead of HTML?
+
+Suppose you ask:
+
+> "Create a dashboard showing CPU, RAM, and Disk."
+
+### Option A: LLM generates HTML
+
+```html
+<div class="container">
+...
+```
+
+Problems:
+
+* HTML structure may vary every time.
+* CSS classes may be inconsistent.
+* JavaScript may be incorrect.
+* Harder to validate.
+
+---
+
+### Option B: LLM generates JSON
+
+```json
+{
+  "type": "dashboard",
+  "widgets": [
+    {
+      "type": "gauge",
+      "label": "CPU",
+      "value": 78
+    },
+    {
+      "type": "gauge",
+      "label": "RAM",
+      "value": 52
+    }
+  ]
+}
+```
+
+Your renderer already knows how to display a `"gauge"` widget consistently.
+
+---
+
+# Biggest advantage
+
+The **same JSON** can be rendered into multiple backends.
+
+```
+                JSON UI
+                    │
+     ┌──────────────┼──────────────┐
+     │              │              │
+     ▼              ▼              ▼
+  HTML         Terminal UI        SVG
+     │              │              │
+ Browser        ANSI/Rich       Vector Image
+```
+
+Or even:
+
+```
+                JSON UI
+                    │
+     ┌──────────────┼──────────────┬──────────────┐
+     ▼              ▼              ▼              ▼
+    HTML        SVG Renderer   Qt Renderer   Pygame Renderer
+```
+
+## Why this works well with a 4B local LLM
+
+Smaller models are generally much better at producing **structured data** like:
+
+```json
+{
+  "type": "button",
+  "text": "Run"
+}
+```
+
+than at generating hundreds of lines of correct HTML, CSS, and JavaScript. By keeping the LLM's job to **describing the UI** and letting your renderer **implement the UI**, you get more reliable and consistent results while also being able to support multiple rendering backends.
+
+
+## Requirements
+- Name of the script main.py
+- Make the logic and script very simple
+- Handle errors gracefully with try-except blocks
+- Include docstrings and comments
+- Use PascalCase for Functions
+- Use camelCase for Variables
+- Only create 1 file, do not create readme file or any other file
+- Also add a README.md text at the top of the file in multiline comments
+- Save the logs to Logs/log-<current date>.log file
+
+
