@@ -1,0 +1,133 @@
+"""
+LLM Handler for VibeTerminal
+Manages communication with Claude API and provides test data fallback
+"""
+
+import os
+from config import CONFIG
+
+
+class LLMHandler:
+    """Handles LLM communication with fallback to test data"""
+    
+    def __init__(self):
+        self.enabled = CONFIG["llm_enabled"]
+        self.provider = CONFIG["llm_provider"]
+        self.api_key = CONFIG["anthropic_api_key"] or os.getenv("ANTHROPIC_API_KEY")
+        self.model = CONFIG["llm_model"]
+        self.use_test_data = CONFIG["use_test_data"]
+        self.client = None
+        
+        if self.enabled and self.provider == "anthropic":
+            self._init_anthropic()
+    
+    def _init_anthropic(self):
+        """Initialize Anthropic client"""
+        try:
+            from anthropic import Anthropic
+            if not self.api_key:
+                raise ValueError("ANTHROPIC_API_KEY not set")
+            self.client = Anthropic(api_key=self.api_key)
+        except ImportError:
+            print("Warning: anthropic package not installed. Using test data mode.")
+            self.enabled = False
+        except Exception as e:
+            print(f"Warning: Could not initialize LLM: {str(e)}. Using test data mode.")
+            self.enabled = False
+    
+    def get_response(self, prompt, system_prompt=None, max_tokens=None, use_test=None):
+        """
+        Get response from LLM with fallback to test data
+        
+        Args:
+            prompt: The user prompt
+            system_prompt: Optional system prompt
+            max_tokens: Max tokens for response
+            use_test: Force test data (None = auto)
+        
+        Returns:
+            Response text or None
+        """
+        # Determine if we should use test data
+        should_use_test = use_test if use_test is not None else (not self.enabled or not self.client)
+        
+        if should_use_test and self.use_test_data:
+            return self._get_test_response(prompt)
+        
+        if not self.enabled or not self.client:
+            return None
+        
+        try:
+            messages = [{"role": "user", "content": prompt}]
+            
+            kwargs = {
+                "model": self.model,
+                "max_tokens": max_tokens or CONFIG["llm_max_tokens"],
+                "messages": messages,
+            }
+            
+            if system_prompt:
+                kwargs["system"] = system_prompt
+            
+            response = self.client.messages.create(**kwargs)
+            
+            if response.content and len(response.content) > 0:
+                return response.content[0].text
+            return None
+        
+        except Exception as e:
+            print(f"LLM Error: {str(e)}")
+            if self.use_test_data:
+                return self._get_test_response(prompt)
+            return None
+    
+    def _get_test_response(self, prompt):
+        """Get test/fallback response (override in subclass or game)"""
+        return "Test response mode: No LLM available. Using predefined data."
+    
+    def stream_response(self, prompt, system_prompt=None, use_test=None):
+        """
+        Stream response from LLM (generator function)
+        Yields text chunks as they arrive
+        """
+        # Determine if we should use test data
+        should_use_test = use_test if use_test is not None else (not self.enabled or not self.client)
+        
+        if should_use_test and self.use_test_data:
+            response = self._get_test_response(prompt)
+            yield response
+            return
+        
+        if not self.enabled or not self.client:
+            return
+        
+        try:
+            messages = [{"role": "user", "content": prompt}]
+            
+            with self.client.messages.stream(
+                model=self.model,
+                max_tokens=CONFIG["llm_max_tokens"],
+                messages=messages,
+                system=system_prompt
+            ) as stream:
+                for text in stream.text_stream:
+                    yield text
+        
+        except Exception as e:
+            print(f"LLM Stream Error: {str(e)}")
+            if self.use_test_data:
+                response = self._get_test_response(prompt)
+                yield response
+
+
+class MockLLMHandler(LLMHandler):
+    """Mock LLM handler for testing without API"""
+    
+    def __init__(self):
+        self.enabled = False
+        self.use_test_data = True
+        self.client = None
+    
+    def _get_test_response(self, prompt):
+        """Mock response"""
+        return "[Mock Response] This is a test response without LLM connectivity."

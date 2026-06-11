@@ -300,14 +300,16 @@ j
 
 
 # run ollama as docker image
-docker rm -f ollama
+sudo docker rm -f ollama
 
-docker run -d \
+sudo docker run -d \
   --name ollama \
   -p 11434:11434 \
   -e OLLAMA_MAX_LOADED_MODELS=1 \
   -v ollama:/root/.ollama \
   alpine/ollama
+
+python main.py
 
 docker ps
 
